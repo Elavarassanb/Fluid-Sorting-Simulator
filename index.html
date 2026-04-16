@@ -1,398 +1,375 @@
-<!-- ═══ IMPROVED TRAINING TAB ═══ -->
-<section id="content-play" class="tab-content active">
-  
-  <!-- Hero Section -->
-  <div class="training-hero">
-    <div class="hero-content">
-      <h1>Sorting Training Center</h1>
-      <p>Master the art of fluid sorting with progressive difficulty levels designed to enhance your skills and precision.</p>
-      <div class="hero-cta">
-        <a href="#levels" class="cta-button primary">
-          <span>🚀</span>
-          Start Training
-        </a>
-        <a href="#tutorial" class="cta-button">
-          <span>📚</span>
-          View Tutorial
-        </a>
-      </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluid Sorting Simulator</title>
+    <style>
+        /* Embedded CSS for testing */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9fafb;
+            color: #1f2937;
+            padding: 20px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .training-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .training-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .level-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .level-card:hover {
+            transform: translateY(-4px);
+            border-color: #3b82f6;
+        }
+
+        .level-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .level-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .status-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .connect-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .action-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .beginner .level-badge { background: #10b981; }
+        .intermediate .level-badge { background: #f59e0b; }
+        .advanced .level-badge { background: #ef4444; }
+        .expert .level-badge { background: #8b5cf6; }
+
+        .tab-btn {
+            background: #e5e7eb;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            margin-right: 0.5rem;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+        <button class="tab-btn active" id="tab-play">🎮 Training</button>
+        <button class="tab-btn" id="tab-history">📊 History</button>
     </div>
-    <div class="hero-visual">
-      <div class="hero-animation">
-        <div class="floating-elements">
-          <div class="floating-element">1</div>
-          <div class="floating-element">2</div>
-          <div class="floating-element">3</div>
-          <div class="floating-element">4</div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Arduino Connection Status -->
-  <div class="hardware-status">
-    <div class="status-card" id="hardware-card">
-      <div class="status-visual">
-        <div class="device-icon">🔌</div>
-        <div class="connection-indicator" id="connection-indicator"></div>
-      </div>
-      <div class="status-info">
-        <h3 id="hw-status-title">Hardware Status</h3>
-        <p id="hw-status-desc">Connect your Arduino device to begin training</p>
-        <div class="status-actions">
-          <button id="btn-connect-hw" class="connect-btn">
-            <span>⚡</span>
-            Connect Device
-          </button>
-          <button id="btn-test-hw" class="connect-btn secondary" style="display: none;">
-            <span>🔧</span>
-            Test Connection
-          </button>
+    <!-- Training Tab Content -->
+    <section id="content-play" class="tab-content active">
+        <!-- Hero Section -->
+        <div class="training-hero">
+            <h1>Sorting Training Center</h1>
+            <p>Master the art of fluid sorting with progressive difficulty levels</p>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Level Selection Cards -->
-  <div class="level-selection-container" id="levels">
-    <div class="section-header">
-      <h2>Choose Your Challenge</h2>
-      <p>Select a difficulty level that matches your current skill level and training goals</p>
-    </div>
+        <!-- Hardware Status -->
+        <div class="hardware-status">
+            <div class="status-card" id="hardware-card">
+                <div class="status-visual">
+                    <div class="device-icon">🔌</div>
+                </div>
+                <div class="status-info">
+                    <h3 id="hw-status-title">Hardware Status</h3>
+                    <p id="hw-status-desc">Connect your Arduino device to begin training</p>
+                    <button id="btn-connect-hw" class="connect-btn">
+                        <span>⚡</span> Connect Device
+                    </button>
+                </div>
+            </div>
+        </div>
 
-    <div class="levels-grid">
-      
-      <!-- Beginner Level -->
-      <div class="level-card beginner" data-level="1" tabindex="0">
-        <div class="level-badge">
-          <span class="badge-icon">🌱</span>
-          <span class="badge-text">Beginner</span>
-        </div>
-        
-        <div class="level-header">
-          <div class="level-icon-large">🟢</div>
-          <div class="difficulty-visualization">
-            <div class="difficulty-meter">
-              <div class="meter-fill" style="width: 25%"></div>
+        <!-- Level Selection -->
+        <div class="level-selection-container">
+            <div class="section-header">
+                <h2>Choose Your Challenge</h2>
+                <p>Select a difficulty level that matches your current skill</p>
             </div>
-            <div class="difficulty-label">Easy</div>
-          </div>
-        </div>
-        
-        <div class="level-details">
-          <h3>Getting Started</h3>
-          <p>Perfect for first-time users. Take your time to learn the basics of sorting with generous time limits.</p>
-          
-          <div class="level-specs">
-            <div class="spec-item">
-              <span class="spec-icon">⏱️</span>
-              <div class="spec-info">
-                <div class="spec-value">10s</div>
-                <div class="spec-label">per item</div>
-              </div>
-            </div>
-            <div class="spec-item">
-              <span class="spec-icon">📦</span>
-              <div class="spec-info">
-                <div class="spec-value">40</div>
-                <div class="spec-label">items</div>
-              </div>
-            </div>
-            <div class="spec-item">
-              <span class="spec-icon">🎯</span>
-              <div class="spec-info">
-                <div class="spec-value">~7min</div>
-                <div class="spec-label">duration</div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="level-stats">
-            <div class="stats-grid">
-              <div class="stat-item">
-                <span class="stat-value" id="beginner-success">--</span>
-                <span class="stat-label">Success Rate</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="beginner-time">--</span>
-                <span class="stat-label">Best Time</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="beginner-attempts">0</span>
-                <span class="stat-label">Attempts</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="level-actions">
-          <button class="level-btn" data-level="1">
-            <span>🚀</span>
-            Start Training
-          </button>
-        </div>
-      </div>
 
-      <!-- Intermediate Level -->
-      <div class="level-card intermediate" data-level="2" tabindex="0">
-        <div class="level-badge">
-          <span class="badge-icon">⚡</span>
-          <span class="badge-text">Intermediate</span>
-        </div>
-        
-        <div class="level-header">
-          <div class="level-icon-large">🟡</div>
-          <div class="difficulty-visualization">
-            <div class="difficulty-meter">
-              <div class="meter-fill" style="width: 50%"></div>
-            </div>
-            <div class="difficulty-label">Moderate</div>
-          </div>
-        </div>
-        
-        <div class="level-details">
-          <h3>Building Skills</h3>
-          <p>Step up the pace with moderate time pressure. Good for users with basic sorting experience.</p>
-          
-          <div class="level-specs">
-            <div class="spec-item">
-              <span class="spec-icon">⏱️</span>
-              <div class="spec-info">
-                <div class="spec-value">7s</div>
-                <div class="spec-label">per item</div>
-              </div>
-            </div>
-            <div class="spec-item">
-              <span class="spec-icon">📦</span>
-              <div class="spec-info">
-                <div class="spec-value">40</div>
-                <div class="spec-label">items</div>
-              </div>
-            </div>
-            <div class="spec-item">
-              <span class="spec-icon">🎯</span>
-              <div class="spec-info">
-                <div class="spec-value">~5min</div>
-                <div class="spec-label">duration</div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="level-stats">
-            <div class="stats-grid">
-              <div class="stat-item">
-                <span class="stat-value" id="intermediate-success">--</span>
-                <span class="stat-label">Success Rate</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="intermediate-time">--</span>
-                <span class="stat-label">Best Time</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="intermediate-attempts">0</span>
-                <span class="stat-label">Attempts</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="level-actions">
-          <button class="level-btn" data-level="2">
-            <span>⚡</span>
-            Start Training
-          </button>
-        </div>
-      </div>
+            <div class="levels-grid">
+                <!-- Beginner Level -->
+                <div class="level-card beginner" data-level="1">
+                    <div class="level-badge">🌱 Beginner</div>
+                    <h3>Getting Started</h3>
+                    <p>Perfect for first-time users. Take your time to learn the basics.</p>
+                    <button class="level-btn" data-level="1">
+                        <span>🚀</span> Start Training
+                    </button>
+                </div>
 
-      <!-- Advanced Level -->
-      <div class="level-card advanced" data-level="3" tabindex="0">
-        <div class="level-badge">
-          <span class="badge-icon">🔥</span>
-          <span class="badge-text">Advanced</span>
-        </div>
-        
-        <div class="level-header">
-          <div class="level-icon-large">🟠</div>
-          <div class="difficulty-visualization">
-            <div class="difficulty-meter">
-              <div class="meter-fill" style="width: 75%"></div>
-            </div>
-            <div class="difficulty-label">Hard</div>
-          </div>
-        </div>
-        
-        <div class="level-details">
-          <h3>Skilled Operator</h3>
-          <p>Fast-paced sorting for experienced users. Precision and speed are both required for success.</p>
-          
-          <div class="level-specs">
-            <div class="spec-item">
-              <span class="spec-icon">⏱️</span>
-              <div class="spec-info">
-                <div class="spec-value">5s</div>
-                <div class="spec-label">per item</div>
-              </div>
-            </div>
-            <div class="spec-item">
-              <span class="spec-icon">📦</span>
-              <div class="spec-info">
-                <div class="spec-value">40</div>
-                <div class="spec-label">items</div>
-              </div>
-            </div>
-            <div class="spec-item">
-              <span class="spec-icon">🎯</span>
-              <div class="spec-info">
-                <div class="spec-value">~3min</div>
-                <div class="spec-label">duration</div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="level-stats">
-            <div class="stats-grid">
-              <div class="stat-item">
-                <span class="stat-value" id="advanced-success">--</span>
-                <span class="stat-label">Success Rate</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="advanced-time">--</span>
-                <span class="stat-label">Best Time</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="advanced-attempts">0</span>
-                <span class="stat-label">Attempts</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="level-actions">
-          <button class="level-btn" data-level="3">
-            <span>🔥</span>
-            Start Training
-          </button>
-        </div>
-      </div>
+                <!-- Intermediate Level -->
+                <div class="level-card intermediate" data-level="2">
+                    <div class="level-badge">⚡ Intermediate</div>
+                    <h3>Building Skills</h3>
+                    <p>Step up the pace with moderate time pressure.</p>
+                    <button class="level-btn" data-level="2">
+                        <span>⚡</span> Start Training
+                    </button>
+                </div>
 
-      <!-- Expert Level -->
-      <div class="level-card expert" data-level="4" tabindex="0">
-        <div class="level-badge premium">
-          <span class="badge-icon">👑</span>
-          <span class="badge-text">Expert</span>
-        </div>
-        
-        <div class="level-header">
-          <div class="level-icon-large">🔴</div>
-          <div class="difficulty-visualization">
-            <div class="difficulty-meter">
-              <div class="meter-fill" style="width: 100%"></div>
-            </div>
-            <div class="difficulty-label">Expert</div>
-          </div>
-        </div>
-        
-        <div class="level-details">
-          <h3>Master Level</h3>
-          <p>Ultimate challenge for sorting masters. Lightning-fast decisions and flawless execution required.</p>
-          
-          <div class="level-specs">
-            <div class="spec-item">
-              <span class="spec-icon">⏱️</span>
-              <div class="spec-info">
-                <div class="spec-value">3s</div>
-                <div class="spec-label">per item</div>
-              </div>
-            </div>
-            <div class="spec-item">
-              <span class="spec-icon">📦</span>
-              <div class="spec-info">
-                <div class="spec-value">40</div>
-                <div class="spec-label">items</div>
-              </div>
-            </div>
-            <div class="spec-item">
-              <span class="spec-icon">🎯</span>
-              <div class="spec-info">
-                <div class="spec-value">~2min</div>
-                <div class="spec-label">duration</div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="level-stats">
-            <div class="stats-grid">
-              <div class="stat-item">
-                <span class="stat-value" id="expert-success">--</span>
-                <span class="stat-label">Success Rate</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="expert-time">--</span>
-                <span class="stat-label">Best Time</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-value" id="expert-attempts">0</span>
-                <span class="stat-label">Attempts</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="level-actions">
-          <button class="level-btn premium" data-level="4">
-            <span>👑</span>
-            Master Challenge
-          </button>
-        </div>
-      </div>
+                <!-- Advanced Level -->
+                <div class="level-card advanced" data-level="3">
+                    <div class="level-badge">🔥 Advanced</div>
+                    <h3>Skilled Operator</h3>
+                    <p>Fast-paced sorting for experienced users.</p>
+                    <button class="level-btn" data-level="3">
+                        <span>🔥</span> Start Training
+                    </button>
+                </div>
 
-    </div>
-  </div>
+                <!-- Expert Level -->
+                <div class="level-card expert" data-level="4">
+                    <div class="level-badge">👑 Expert</div>
+                    <h3>Master Level</h3>
+                    <p>Ultimate challenge for sorting masters.</p>
+                    <button class="level-btn" data-level="4">
+                        <span>👑</span> Master Challenge
+                    </button>
+                </div>
+            </div>
+        </div>
 
-  <!-- Quick Actions -->
-  <div class="quick-actions">
-    <div class="action-card" tabindex="0">
-      <div class="action-icon">🎲</div>
-      <div class="action-content">
-        <h4>Random Challenge</h4>
-        <p>Let the system pick a difficulty level for you based on your performance</p>
-      </div>
-      <button class="action-btn" id="btn-random">
-        <span>🎲</span>
-        Try Random
-      </button>
-    </div>
-    
-    <div class="action-card" tabindex="0" id="tutorial">
-      <div class="action-icon">📚</div>
-      <div class="action-content">
-        <h4>Interactive Tutorial</h4>
-        <p>Learn sorting techniques with step-by-step guided instructions</p>
-      </div>
-      <button class="action-btn" id="btn-tutorial">
-        <span>📚</span>
-        Start Tutorial
-      </button>
-    </div>
-    
-    <div class="action-card" tabindex="0">
-      <div class="action-icon">⚙️</div>
-      <div class="action-content">
-        <h4>Custom Training</h4>
-        <p>Create personalized difficulty settings and training parameters</p>
-      </div>
-      <button class="action-btn" id="btn-custom">
-        <span>⚙️</span>
-        Customize
-      </button>
-    </div>
-  </div>
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="action-card">
+                <div class="action-icon">🎲</div>
+                <h4>Random Challenge</h4>
+                <p>Let the system pick a level for you</p>
+                <button class="action-btn" id="btn-random">Try Random</button>
+            </div>
+            
+            <div class="action-card">
+                <div class="action-icon">📚</div>
+                <h4>Tutorial Mode</h4>
+                <p>Learn with guided instructions</p>
+                <button class="action-btn" id="btn-tutorial">Start Tutorial</button>
+            </div>
+            
+            <div class="action-card">
+                <div class="action-icon">⚙️</div>
+                <h4>Custom Settings</h4>
+                <p>Create your own difficulty</p>
+                <button class="action-btn" id="btn-custom">Customize</button>
+            </div>
+        </div>
+    </section>
 
-  <!-- Loading States (Hidden by default) -->
-  <div class="loading-card skeleton" style="display: none;" id="loading-placeholder">
-    <div class="skeleton-text large"></div>
-    <div class="skeleton-text"></div>
-    <div class="skeleton-text short"></div>
-  </div>
+    <!-- History Tab Content -->
+    <section id="content-history" class="tab-content">
+        <div class="section-header">
+            <h2>Game History</h2>
+            <p>Track your progress and performance over time</p>
+        </div>
+        <div id="history-list">
+            <div class="no-history">
+                <p>🎯 No games played yet</p>
+                <p>Play your first game to see results here!</p>
+            </div>
+        </div>
+    </section>
 
-</section>
+    <script>
+        // Simple JavaScript for testing
+        console.log('JavaScript is loading...');
+
+        // Tab switching
+        function switchTab(tabName) {
+            console.log('Switching to tab:', tabName);
+            
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            const tabBtn = document.getElementById(`tab-${tabName}`);
+            const tabContent = document.getElementById(`content-${tabName}`);
+            
+            if (tabBtn) tabBtn.classList.add('active');
+            if (tabContent) tabContent.classList.add('active');
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, setting up event listeners...');
+
+            // Tab buttons
+            const tabPlay = document.getElementById('tab-play');
+            const tabHistory = document.getElementById('tab-history');
+            
+            if (tabPlay) {
+                tabPlay.addEventListener('click', () => switchTab('play'));
+                console.log('Play tab listener added');
+            }
+            
+            if (tabHistory) {
+                tabHistory.addEventListener('click', () => switchTab('history'));
+                console.log('History tab listener added');
+            }
+
+            // Level buttons
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const level = this.dataset.level;
+                    console.log('Level button clicked:', level);
+                    alert(`Starting Level ${level} - ${this.textContent}`);
+                });
+            });
+
+            // Connect button
+            const connectBtn = document.getElementById('btn-connect-hw');
+            if (connectBtn) {
+                connectBtn.addEventListener('click', function() {
+                    console.log('Connect button clicked');
+                    alert('Arduino connection feature - coming soon!');
+                });
+            }
+
+            // Quick action buttons
+            const btnRandom = document.getElementById('btn-random');
+            const btnTutorial = document.getElementById('btn-tutorial');
+            const btnCustom = document.getElementById('btn-custom');
+
+            if (btnRandom) {
+                btnRandom.addEventListener('click', () => {
+                    console.log('Random button clicked');
+                    alert('Random level selection - coming soon!');
+                });
+            }
+
+            if (btnTutorial) {
+                btnTutorial.addEventListener('click', () => {
+                    console.log('Tutorial button clicked');
+                    alert('Tutorial mode - coming soon!');
+                });
+            }
+
+            if (btnCustom) {
+                btnCustom.addEventListener('click', () => {
+                    console.log('Custom button clicked');
+                    alert('Custom settings - coming soon!');
+                });
+            }
+
+            console.log('All event listeners set up successfully!');
+        });
+
+        console.log('JavaScript loaded successfully!');
+    </script>
+</body>
+</html>
