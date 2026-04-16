@@ -5,14 +5,25 @@
   <div class="training-hero">
     <div class="hero-content">
       <h1>Sorting Training Center</h1>
-      <p>Master the art of fluid sorting with progressive difficulty levels</p>
+      <p>Master the art of fluid sorting with progressive difficulty levels designed to enhance your skills and precision.</p>
+      <div class="hero-cta">
+        <a href="#levels" class="cta-button primary">
+          <span>🚀</span>
+          Start Training
+        </a>
+        <a href="#tutorial" class="cta-button">
+          <span>📚</span>
+          View Tutorial
+        </a>
+      </div>
     </div>
     <div class="hero-visual">
-      <div class="sorting-animation">
-        <div class="animated-box">📦</div>
-        <div class="animated-arrow">→</div>
-        <div class="animated-nodes">
-          <span>1</span><span>2</span><span>3</span><span>4</span>
+      <div class="hero-animation">
+        <div class="floating-elements">
+          <div class="floating-element">1</div>
+          <div class="floating-element">2</div>
+          <div class="floating-element">3</div>
+          <div class="floating-element">4</div>
         </div>
       </div>
     </div>
@@ -20,296 +31,318 @@
 
   <!-- Arduino Connection Status -->
   <div class="hardware-status">
-    <div class="status-card">
+    <div class="status-card" id="hardware-card">
       <div class="status-visual">
         <div class="device-icon">🔌</div>
-        <div class="connection-pulse" id="connection-pulse"></div>
+        <div class="connection-indicator" id="connection-indicator"></div>
       </div>
       <div class="status-info">
-        <h3 id="hw-status-title">Hardware Ready</h3>
-        <p id="hw-status-desc">Arduino connected and responsive</p>
-        <button id="btn-connect-hw" class="connect-btn">
-          <span class="btn-icon">⚡</span>
-          <span class="btn-text">Connect Device</span>
-        </button>
+        <h3 id="hw-status-title">Hardware Status</h3>
+        <p id="hw-status-desc">Connect your Arduino device to begin training</p>
+        <div class="status-actions">
+          <button id="btn-connect-hw" class="connect-btn">
+            <span>⚡</span>
+            Connect Device
+          </button>
+          <button id="btn-test-hw" class="connect-btn secondary" style="display: none;">
+            <span>🔧</span>
+            Test Connection
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Level Selection Cards -->
-  <div class="level-selection-container">
+  <div class="level-selection-container" id="levels">
     <div class="section-header">
       <h2>Choose Your Challenge</h2>
-      <p>Select a difficulty level that matches your current skill</p>
+      <p>Select a difficulty level that matches your current skill level and training goals</p>
     </div>
 
     <div class="levels-grid">
       
       <!-- Beginner Level -->
-      <div class="level-card beginner" data-level="1">
+      <div class="level-card beginner" data-level="1" tabindex="0">
         <div class="level-badge">
-          <div class="badge-icon">🌱</div>
+          <span class="badge-icon">🌱</span>
           <span class="badge-text">Beginner</span>
         </div>
         
-        <div class="level-visual">
-          <div class="difficulty-meter">
-            <div class="meter-fill" style="width: 25%"></div>
-          </div>
+        <div class="level-header">
           <div class="level-icon-large">🟢</div>
+          <div class="difficulty-visualization">
+            <div class="difficulty-meter">
+              <div class="meter-fill" style="width: 25%"></div>
+            </div>
+            <div class="difficulty-label">Easy</div>
+          </div>
         </div>
         
         <div class="level-details">
           <h3>Getting Started</h3>
-          <p>Perfect for first-time users. Take your time to learn the basics.</p>
+          <p>Perfect for first-time users. Take your time to learn the basics of sorting with generous time limits.</p>
           
           <div class="level-specs">
             <div class="spec-item">
               <span class="spec-icon">⏱️</span>
               <div class="spec-info">
-                <strong>10 seconds</strong>
-                <small>per item</small>
+                <div class="spec-value">10s</div>
+                <div class="spec-label">per item</div>
               </div>
             </div>
             <div class="spec-item">
               <span class="spec-icon">📦</span>
               <div class="spec-info">
-                <strong>40 items</strong>
-                <small>total</small>
+                <div class="spec-value">40</div>
+                <div class="spec-label">items</div>
               </div>
             </div>
             <div class="spec-item">
               <span class="spec-icon">🎯</span>
               <div class="spec-info">
-                <strong>~7 minutes</strong>
-                <small>duration</small>
+                <div class="spec-value">~7min</div>
+                <div class="spec-label">duration</div>
               </div>
             </div>
           </div>
           
           <div class="level-stats">
-            <div class="stat-row">
-              <span>Success Rate:</span>
-              <span class="stat-value" id="beginner-success">--</span>
-            </div>
-            <div class="stat-row">
-              <span>Best Time:</span>
-              <span class="stat-value" id="beginner-time">--</span>
-            </div>
-            <div class="stat-row">
-              <span>Attempts:</span>
-              <span class="stat-value" id="beginner-attempts">0</span>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-value" id="beginner-success">--</span>
+                <span class="stat-label">Success Rate</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="beginner-time">--</span>
+                <span class="stat-label">Best Time</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="beginner-attempts">0</span>
+                <span class="stat-label">Attempts</span>
+              </div>
             </div>
           </div>
         </div>
         
         <div class="level-actions">
-          <button class="level-btn primary">
-            <span class="btn-icon">🚀</span>
-            <span class="btn-text">Start Training</span>
+          <button class="level-btn" data-level="1">
+            <span>🚀</span>
+            Start Training
           </button>
-          <div class="difficulty-label">Recommended for beginners</div>
         </div>
       </div>
 
       <!-- Intermediate Level -->
-      <div class="level-card intermediate" data-level="2">
+      <div class="level-card intermediate" data-level="2" tabindex="0">
         <div class="level-badge">
-          <div class="badge-icon">⚡</div>
+          <span class="badge-icon">⚡</span>
           <span class="badge-text">Intermediate</span>
         </div>
         
-        <div class="level-visual">
-          <div class="difficulty-meter">
-            <div class="meter-fill" style="width: 50%"></div>
-          </div>
+        <div class="level-header">
           <div class="level-icon-large">🟡</div>
+          <div class="difficulty-visualization">
+            <div class="difficulty-meter">
+              <div class="meter-fill" style="width: 50%"></div>
+            </div>
+            <div class="difficulty-label">Moderate</div>
+          </div>
         </div>
         
         <div class="level-details">
           <h3>Building Skills</h3>
-          <p>Step up the pace. Good for users with basic sorting experience.</p>
+          <p>Step up the pace with moderate time pressure. Good for users with basic sorting experience.</p>
           
           <div class="level-specs">
             <div class="spec-item">
               <span class="spec-icon">⏱️</span>
               <div class="spec-info">
-                <strong>7 seconds</strong>
-                <small>per item</small>
+                <div class="spec-value">7s</div>
+                <div class="spec-label">per item</div>
               </div>
             </div>
             <div class="spec-item">
               <span class="spec-icon">📦</span>
               <div class="spec-info">
-                <strong>40 items</strong>
-                <small>total</small>
+                <div class="spec-value">40</div>
+                <div class="spec-label">items</div>
               </div>
             </div>
             <div class="spec-item">
               <span class="spec-icon">🎯</span>
               <div class="spec-info">
-                <strong>~5 minutes</strong>
-                <small>duration</small>
+                <div class="spec-value">~5min</div>
+                <div class="spec-label">duration</div>
               </div>
             </div>
           </div>
           
           <div class="level-stats">
-            <div class="stat-row">
-              <span>Success Rate:</span>
-              <span class="stat-value" id="intermediate-success">--</span>
-            </div>
-            <div class="stat-row">
-              <span>Best Time:</span>
-              <span class="stat-value" id="intermediate-time">--</span>
-            </div>
-            <div class="stat-row">
-              <span>Attempts:</span>
-              <span class="stat-value" id="intermediate-attempts">0</span>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-value" id="intermediate-success">--</span>
+                <span class="stat-label">Success Rate</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="intermediate-time">--</span>
+                <span class="stat-label">Best Time</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="intermediate-attempts">0</span>
+                <span class="stat-label">Attempts</span>
+              </div>
             </div>
           </div>
         </div>
         
         <div class="level-actions">
-          <button class="level-btn primary">
-            <span class="btn-icon">⚡</span>
-            <span class="btn-text">Start Training</span>
+          <button class="level-btn" data-level="2">
+            <span>⚡</span>
+            Start Training
           </button>
-          <div class="difficulty-label">Moderate challenge</div>
         </div>
       </div>
 
       <!-- Advanced Level -->
-      <div class="level-card advanced" data-level="3">
+      <div class="level-card advanced" data-level="3" tabindex="0">
         <div class="level-badge">
-          <div class="badge-icon">🔥</div>
+          <span class="badge-icon">🔥</span>
           <span class="badge-text">Advanced</span>
         </div>
         
-        <div class="level-visual">
-          <div class="difficulty-meter">
-            <div class="meter-fill" style="width: 75%"></div>
-          </div>
+        <div class="level-header">
           <div class="level-icon-large">🟠</div>
+          <div class="difficulty-visualization">
+            <div class="difficulty-meter">
+              <div class="meter-fill" style="width: 75%"></div>
+            </div>
+            <div class="difficulty-label">Hard</div>
+          </div>
         </div>
         
         <div class="level-details">
           <h3>Skilled Operator</h3>
-          <p>Fast-paced sorting for experienced users. Precision required.</p>
+          <p>Fast-paced sorting for experienced users. Precision and speed are both required for success.</p>
           
           <div class="level-specs">
             <div class="spec-item">
               <span class="spec-icon">⏱️</span>
               <div class="spec-info">
-                <strong>5 seconds</strong>
-                <small>per item</small>
+                <div class="spec-value">5s</div>
+                <div class="spec-label">per item</div>
               </div>
             </div>
             <div class="spec-item">
               <span class="spec-icon">📦</span>
               <div class="spec-info">
-                <strong>40 items</strong>
-                <small>total</small>
+                <div class="spec-value">40</div>
+                <div class="spec-label">items</div>
               </div>
             </div>
             <div class="spec-item">
               <span class="spec-icon">🎯</span>
               <div class="spec-info">
-                <strong>~3 minutes</strong>
-                <small>duration</small>
+                <div class="spec-value">~3min</div>
+                <div class="spec-label">duration</div>
               </div>
             </div>
           </div>
           
           <div class="level-stats">
-            <div class="stat-row">
-              <span>Success Rate:</span>
-              <span class="stat-value" id="advanced-success">--</span>
-            </div>
-            <div class="stat-row">
-              <span>Best Time:</span>
-              <span class="stat-value" id="advanced-time">--</span>
-            </div>
-            <div class="stat-row">
-              <span>Attempts:</span>
-              <span class="stat-value" id="advanced-attempts">0</span>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-value" id="advanced-success">--</span>
+                <span class="stat-label">Success Rate</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="advanced-time">--</span>
+                <span class="stat-label">Best Time</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="advanced-attempts">0</span>
+                <span class="stat-label">Attempts</span>
+              </div>
             </div>
           </div>
         </div>
         
         <div class="level-actions">
-          <button class="level-btn primary">
-            <span class="btn-icon">🔥</span>
-            <span class="btn-text">Start Training</span>
+          <button class="level-btn" data-level="3">
+            <span>🔥</span>
+            Start Training
           </button>
-          <div class="difficulty-label">High skill required</div>
         </div>
       </div>
 
       <!-- Expert Level -->
-      <div class="level-card expert" data-level="4">
+      <div class="level-card expert" data-level="4" tabindex="0">
         <div class="level-badge premium">
-          <div class="badge-icon">👑</div>
+          <span class="badge-icon">👑</span>
           <span class="badge-text">Expert</span>
         </div>
         
-        <div class="level-visual">
-          <div class="difficulty-meter">
-            <div class="meter-fill" style="width: 100%"></div>
-          </div>
+        <div class="level-header">
           <div class="level-icon-large">🔴</div>
+          <div class="difficulty-visualization">
+            <div class="difficulty-meter">
+              <div class="meter-fill" style="width: 100%"></div>
+            </div>
+            <div class="difficulty-label">Expert</div>
+          </div>
         </div>
         
         <div class="level-details">
           <h3>Master Level</h3>
-          <p>Ultimate challenge for sorting masters. Lightning-fast decisions needed.</p>
+          <p>Ultimate challenge for sorting masters. Lightning-fast decisions and flawless execution required.</p>
           
           <div class="level-specs">
             <div class="spec-item">
               <span class="spec-icon">⏱️</span>
               <div class="spec-info">
-                <strong>3 seconds</strong>
-                <small>per item</small>
+                <div class="spec-value">3s</div>
+                <div class="spec-label">per item</div>
               </div>
             </div>
             <div class="spec-item">
               <span class="spec-icon">📦</span>
               <div class="spec-info">
-                <strong>40 items</strong>
-                <small>total</small>
+                <div class="spec-value">40</div>
+                <div class="spec-label">items</div>
               </div>
             </div>
             <div class="spec-item">
               <span class="spec-icon">🎯</span>
               <div class="spec-info">
-                <strong>~2 minutes</strong>
-                <small>duration</small>
+                <div class="spec-value">~2min</div>
+                <div class="spec-label">duration</div>
               </div>
             </div>
           </div>
           
           <div class="level-stats">
-            <div class="stat-row">
-              <span>Success Rate:</span>
-              <span class="stat-value" id="expert-success">--</span>
-            </div>
-            <div class="stat-row">
-              <span>Best Time:</span>
-              <span class="stat-value" id="expert-time">--</span>
-            </div>
-            <div class="stat-row">
-              <span>Attempts:</span>
-              <span class="stat-value" id="expert-attempts">0</span>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-value" id="expert-success">--</span>
+                <span class="stat-label">Success Rate</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="expert-time">--</span>
+                <span class="stat-label">Best Time</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="expert-attempts">0</span>
+                <span class="stat-label">Attempts</span>
+              </div>
             </div>
           </div>
         </div>
         
         <div class="level-actions">
-          <button class="level-btn primary premium">
-            <span class="btn-icon">👑</span>
-            <span class="btn-text">Master Challenge</span>
+          <button class="level-btn premium" data-level="4">
+            <span>👑</span>
+            Master Challenge
           </button>
-          <div class="difficulty-label">For sorting masters only</div>
         </div>
       </div>
 
@@ -318,32 +351,48 @@
 
   <!-- Quick Actions -->
   <div class="quick-actions">
-    <div class="action-card">
+    <div class="action-card" tabindex="0">
       <div class="action-icon">🎲</div>
       <div class="action-content">
         <h4>Random Challenge</h4>
-        <p>Let the system pick a level for you</p>
+        <p>Let the system pick a difficulty level for you based on your performance</p>
       </div>
-      <button class="action-btn" id="btn-random">Try Random</button>
+      <button class="action-btn" id="btn-random">
+        <span>🎲</span>
+        Try Random
+      </button>
     </div>
     
-    <div class="action-card">
+    <div class="action-card" tabindex="0" id="tutorial">
       <div class="action-icon">📚</div>
       <div class="action-content">
-        <h4>Tutorial Mode</h4>
-        <p>Learn with guided instructions</p>
+        <h4>Interactive Tutorial</h4>
+        <p>Learn sorting techniques with step-by-step guided instructions</p>
       </div>
-      <button class="action-btn" id="btn-tutorial">Start Tutorial</button>
+      <button class="action-btn" id="btn-tutorial">
+        <span>📚</span>
+        Start Tutorial
+      </button>
     </div>
     
-    <div class="action-card">
+    <div class="action-card" tabindex="0">
       <div class="action-icon">⚙️</div>
       <div class="action-content">
-        <h4>Custom Settings</h4>
-        <p>Create your own difficulty</p>
+        <h4>Custom Training</h4>
+        <p>Create personalized difficulty settings and training parameters</p>
       </div>
-      <button class="action-btn" id="btn-custom">Customize</button>
+      <button class="action-btn" id="btn-custom">
+        <span>⚙️</span>
+        Customize
+      </button>
     </div>
+  </div>
+
+  <!-- Loading States (Hidden by default) -->
+  <div class="loading-card skeleton" style="display: none;" id="loading-placeholder">
+    <div class="skeleton-text large"></div>
+    <div class="skeleton-text"></div>
+    <div class="skeleton-text short"></div>
   </div>
 
 </section>
