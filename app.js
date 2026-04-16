@@ -1,47 +1,195 @@
 (() => {
-  // ─── Socket ───
-  const socket = io();
-
-  // ─── DOM ───
-  const screenMenu    = document.getElementById('screen-menu');
-  const screenGame    = document.getElementById('screen-game');
+  // ─── DOM Elements ───
+  const screenMenu = document.getElementById('screen-menu');
+  const screenGame = document.getElementById('screen-game');
   const screenResults = document.getElementById('screen-results');
-  const serialStatus  = document.getElementById('serial-status');
+  const serialStatusWeb = document.getElementById('serial-status-web');
+  const btnConnectSerial = document.getElementById('btn-connect-serial');
   const conveyorTrack = document.getElementById('conveyor-track');
-  const hudLevel      = document.getElementById('hud-level');
-  const hudProgress   = document.getElementById('hud-progress');
-  const hudStatus     = document.getElementById('hud-status');
-  const hudTimer      = document.getElementById('hud-timer');
-  const btnPick       = document.getElementById('btn-pick');
-  const btnRestart    = document.getElementById('btn-restart');
+  const hudLevel = document.getElementById('hud-level');
+  const hudProgress = document.getElementById('hud-progress');
+  const hudStatus = document.getElementById('hud-status');
+  const hudTimer = document.getElementById('hud-timer');
+  const btnPick = document.getElementById('btn-pick');
+  const btnRestart = document.getElementById('btn-restart');
 
-  // ─── State ───
+  // ─── Web Serial API Variables ───
+  let serialPort = null;
+  let serialReader = null;
+  let serialConnected = false;
+
+  // ─── Game State ───
   let config = null;
-  let gameImages = [];       // shuffled array of image objects
+  let gameImages = [];
   let currentIndex = 0;
   let level = 1;
   let speedSec = 10;
   let isPicked = false;
-  let pickedLabel = null;    // the image object currently picked
+  let pickedLabel = null;
   let animationId = null;
   let conveyorX = 0;
   let lastTimestamp = 0;
   let paused = false;
-  let gameStartTime = 0;     // Track game start time
-  let gameEndTime = 0;       // Track game end time
+  let gameStartTime = 0;
+  let gameEndTime = 0;
+  let results = [];
+  let spilloverChecked = new Set();
 
-  // Results tracking
-  let results = [];  // { file, node, action: 'correct'|'missorted'|'spillover'|'falsepick'|'ignored' }
-
-  // Constants
-  const LABEL_WIDTH = 600;
+  // ─── Constants ───
+  const LABEL_WIDTH = 200;
   const LABEL_GAP = 60;
   const LABEL_TOTAL = LABEL_WIDTH + LABEL_GAP;
+  const PICK_ZONE_TOLERANCE = 130;
 
-  // ─── Load Config ───
-  async function loadConfig() {
-    const res = await fetch('/api/config');
-    config = await res.json();
+  // ─── Embedded Config (No Server Needed) ───
+  config = {
+    "images": [
+      { "file": "label_01.png", "node": 1 },
+      { "file": "label_02.png", "node": 2 },
+      { "file": "label_03.png", "node": 3 },
+      { "file": "label_04.png", "node": 4 },
+      { "file": "label_05.png", "node": 1 },
+      { "file": "label_06.png", "node": 2 },
+      { "file": "label_07.png", "node": null },
+      { "file": "label_08.png", "node": 3 },
+      { "file": "label_09.png", "node": null },
+      { "file": "label_10.png", "node": 4 },
+      { "file": "label_11.png", "node": 1 },
+      { "file": "label_12.png", "node": null },
+      { "file": "label_13.png", "node": 2 },
+      { "file": "label_14.png", "node": 3 },
+      { "file": "label_15.png", "node": null },
+      { "file": "label_16.png", "node": 4 },
+      { "file": "label_17.png", "node": 1 },
+      { "file": "label_18.png", "node": null },
+      { "file": "label_19.png", "node": 2 },
+      { "file": "label_20.png", "node": 3 },
+      { "file": "label_21.png", "node": 4 },
+      { "file": "label_22.png", "node": null },
+      { "file": "label_23.png", "node": 1 },
+      { "file": "label_24.png", "node": null },
+      { "file": "label_25.png", "node": 2 },
+      { "file": "label_26.png", "node": 3 },
+      { "file": "label_27.png", "node": null },
+      { "file": "label_28.png", "node": 4 },
+      { "file": "label_29.png", "node": 1 },
+      { "file": "label_30.png", "node": null },
+      { "file": "label_31.png", "node": 2 },
+      { "file": "label_32.png", "node": null },
+      { "file": "label_33.png", "node": 3 },
+      { "file": "label_34.png", "node": null },
+      { "file": "label_35.png", "node": 4 },
+      { "file": "label_36.png", "node": null },
+      { "file": "label_37.png", "node": null },
+      { "file": "label_38.png", "node": null },
+      { "file": "label_39.png", "node": 1 },
+      { "file": "label_40.png", "node": null }
+    ],
+    "levels": {
+      "1": { "name": "Easy", "speedSec": 10 },
+      "2": { "name": "Medium", "speedSec": 7 },
+      "3": { "name": "Hard", "speedSec": 5 },
+      "4": { "name": "Expert", "speedSec": 3 }
+    }
+  };
+
+  // ─── Web Serial API Functions ───
+  async function connectArduino() {
+    if (!('serial' in navigator)) {
+      alert('Web Serial API not supported. Use Chrome/Edge browser with HTTPS or localhost.');
+      return;
+    }
+
+    try {
+      // Request serial port
+      serialPort = await navigator.serial.requestPort();
+      
+      // Open the port
+      await serialPort.open({ 
+        baudRate: 9600,
+        dataBits: 8,
+        stopBits: 1,
+        parity: 'none'
+      });
+
+      console.log('✅ Arduino connected via Web Serial API');
+      serialConnected = true;
+      updateSerialStatus(true);
+
+      // Start reading data
+      startSerialReader();
+
+    } catch (error) {
+      console.error('❌ Serial connection failed:', error);
+      updateSerialStatus(false, error.message);
+    }
+  }
+
+  async function startSerialReader() {
+    if (!serialPort || !serialPort.readable) return;
+
+    const textDecoder = new TextDecoderStream();
+    const readableStreamClosed = serialPort.readable.pipeTo(textDecoder.writable);
+    serialReader = textDecoder.readable.getReader();
+
+    try {
+      while (true) {
+        const { value, done } = await serialReader.read();
+        if (done) break;
+
+        // Process Arduino data
+        const lines = value.split('\n');
+        lines.forEach(line => {
+          const cmd = line.trim();
+          if (cmd) {
+            console.log('🔘 Arduino:', cmd);
+            handleArduinoCommand(cmd);
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Serial read error:', error);
+    } finally {
+      serialReader.releaseLock();
+    }
+  }
+
+  function handleArduinoCommand(cmd) {
+    if (cmd === 'P') {
+      doPick();
+    } else if (['1', '2', '3', '4'].includes(cmd)) {
+      doDrop(parseInt(cmd));
+    } else if (cmd === 'READY') {
+      console.log('🤖 Arduino ready');
+    }
+  }
+
+  async function disconnectArduino() {
+    if (serialReader) {
+      await serialReader.cancel();
+      serialReader = null;
+    }
+    
+    if (serialPort) {
+      await serialPort.close();
+      serialPort = null;
+    }
+    
+    serialConnected = false;
+    updateSerialStatus(false);
+    console.log('📴 Arduino disconnected');
+  }
+
+  function updateSerialStatus(connected, error = null) {
+    if (connected) {
+      serialStatusWeb.textContent = '✅ Arduino Connected';
+      serialStatusWeb.className = 'status-badge connected';
+      btnConnectSerial.textContent = '📴 Disconnect Arduino';
+    } else {
+      serialStatusWeb.textContent = error ? `❌ Error: ${error}` : '❌ Arduino Not Connected';
+      serialStatusWeb.className = 'status-badge disconnected';
+      btnConnectSerial.textContent = '🔌 Connect Arduino';
+    }
   }
 
   // ─── Screen Management ───
@@ -50,7 +198,7 @@
     screen.classList.add('active');
   }
 
-  // ─── Shuffle ───
+  // ─── Utility Functions ───
   function shuffle(arr) {
     const a = [...arr];
     for (let i = a.length - 1; i > 0; i--) {
@@ -60,7 +208,7 @@
     return a;
   }
 
-  // ─── Build Conveyor ───
+  // ─── Game Functions (Same as before) ───
   function buildConveyor() {
     conveyorTrack.innerHTML = '';
     gameImages.forEach((img, idx) => {
@@ -78,52 +226,42 @@
     });
   }
 
-  // ─── Get label in pick zone ───
   function getLabelInPickZone() {
     const conveyorRect = document.getElementById('conveyor').getBoundingClientRect();
     const centerX = conveyorRect.left + conveyorRect.width / 2;
-    const tolerance = 600; // half of pick zone width
 
     const labels = conveyorTrack.querySelectorAll('.conveyor-label');
     for (const label of labels) {
       const rect = label.getBoundingClientRect();
       const labelCenter = rect.left + rect.width / 2;
-      if (Math.abs(labelCenter - centerX) < tolerance) {
+      if (Math.abs(labelCenter - centerX) < PICK_ZONE_TOLERANCE) {
         return label;
       }
     }
     return null;
   }
 
-  // ─── Animation Loop ───
   function animate(timestamp) {
     if (!lastTimestamp) lastTimestamp = timestamp;
-    const delta = (timestamp - lastTimestamp) / 1000; // seconds
+    const delta = (timestamp - lastTimestamp) / 1000;
     lastTimestamp = timestamp;
 
     if (!paused) {
-      // pixels per second: one full label slot per speedSec
       const pxPerSec = LABEL_TOTAL / speedSec;
       conveyorX -= pxPerSec * delta;
       conveyorTrack.style.transform = `translateY(-50%) translateX(${conveyorX}px)`;
 
-      // Check which label is in pick zone
       updatePickZoneHighlight();
-
-      // Check if a relevant label has passed the pick zone without being picked
       checkSpillover();
 
-      // Check if all labels have scrolled through
       const totalWidth = gameImages.length * LABEL_TOTAL;
-      if (Math.abs(conveyorX) > totalWidth + 750) {
+      if (Math.abs(conveyorX) > totalWidth + 300) {
         endGame();
         return;
       }
     }
 
-    // Update HUD
     updateHUD();
-
     animationId = requestAnimationFrame(animate);
   }
 
@@ -135,7 +273,9 @@
     labels.forEach(label => {
       const rect = label.getBoundingClientRect();
       const labelCenter = rect.left + rect.width / 2;
-      if (Math.abs(labelCenter - centerX) < 600 && !label.classList.contains('picked') && !label.classList.contains('missed')) {
+      if (Math.abs(labelCenter - centerX) < PICK_ZONE_TOLERANCE && 
+          !label.classList.contains('picked') && 
+          !label.classList.contains('missed')) {
         label.classList.add('in-pick-zone');
       } else {
         label.classList.remove('in-pick-zone');
@@ -143,12 +283,9 @@
     });
   }
 
-  // Track which labels have been checked for spillover
-  let spilloverChecked = new Set();
-
   function checkSpillover() {
     const conveyorRect = document.getElementById('conveyor').getBoundingClientRect();
-    const pickZoneRight = conveyorRect.left + conveyorRect.width / 2 + 130;
+    const pickZoneRight = conveyorRect.left + conveyorRect.width / 2 + PICK_ZONE_TOLERANCE;
 
     const labels = conveyorTrack.querySelectorAll('.conveyor-label');
     labels.forEach(label => {
@@ -156,11 +293,9 @@
       const img = gameImages[idx];
       const rect = label.getBoundingClientRect();
 
-      // Label has fully passed the pick zone
       if (rect.right < pickZoneRight - 200 && !spilloverChecked.has(idx)) {
         spilloverChecked.add(idx);
 
-        // If it's a relevant label and wasn't picked → spillover
         if (img.node !== null && !label.classList.contains('picked')) {
           label.classList.add('missed');
           results.push({
@@ -170,7 +305,6 @@
             droppedNode: null
           });
         }
-        // If irrelevant and not picked → correctly ignored
         if (img.node === null && !label.classList.contains('picked')) {
           results.push({
             file: img.file,
@@ -185,9 +319,8 @@
     hudProgress.textContent = `${results.length} / ${gameImages.length}`;
   }
 
-  // ─── PICK Action ───
   function doPick() {
-    if (isPicked) return; // already holding something
+    if (isPicked) return;
 
     const label = getLabelInPickZone();
     if (!label) return;
@@ -195,7 +328,6 @@
     const idx = parseInt(label.dataset.index);
     const img = gameImages[idx];
 
-    // If already processed, skip
     if (spilloverChecked.has(idx)) return;
 
     isPicked = true;
@@ -210,16 +342,12 @@
     hudStatus.className = 'status-picked';
   }
 
-  // ─── DROP Action ───
   function doDrop(node) {
     if (!isPicked || !pickedLabel) return;
 
     const img = pickedLabel.img;
-    const element = pickedLabel.element;
 
-    // Determine result
     if (img.node === null) {
-      // Picked an irrelevant shipment — false pick
       results.push({
         file: img.file,
         node: null,
@@ -228,7 +356,6 @@
       });
       flashNode(node, 'wrong');
     } else if (img.node === node) {
-      // Correct!
       results.push({
         file: img.file,
         node: img.node,
@@ -237,7 +364,6 @@
       });
       flashNode(node, 'highlight');
     } else {
-      // Mis-sorted
       results.push({
         file: img.file,
         node: img.node,
@@ -247,11 +373,10 @@
       flashNode(node, 'wrong');
     }
 
-    // Reset state
     isPicked = false;
     paused = false;
     pickedLabel = null;
-    lastTimestamp = 0; // reset delta to avoid jump
+    lastTimestamp = 0;
 
     hudStatus.textContent = 'WATCHING';
     hudStatus.className = 'status-idle';
@@ -266,16 +391,13 @@
     }
   }
 
-  // ─── HUD ───
   function updateHUD() {
     hudTimer.textContent = `⏱ ${speedSec}s/label`;
   }
 
-  // ─── End Game ───
   function endGame() {
     if (animationId) cancelAnimationFrame(animationId);
 
-    // Any remaining unprocessed labels
     gameImages.forEach((img, idx) => {
       if (!spilloverChecked.has(idx)) {
         if (img.node !== null) {
@@ -289,7 +411,6 @@
     showResults();
   }
 
-  // ─── Results Dashboard ───
   function showResults() {
     gameEndTime = Date.now();
     const totalTimeMs = gameEndTime - gameStartTime;
@@ -304,14 +425,12 @@
     const ignored = results.filter(r => r.action === 'ignored').length;
     const totalRelevant = gameImages.filter(i => i.node !== null).length;
 
-    // Update stat numbers
     document.getElementById('res-correct').textContent = correct;
     document.getElementById('res-missorted').textContent = missorted;
     document.getElementById('res-spillover').textContent = spillover;
     document.getElementById('res-falsepick').textContent = falsepick;
     document.getElementById('res-ignored').textContent = ignored;
 
-    // Calculate metrics
     const accuracy = totalRelevant > 0 ? Math.round((correct / totalRelevant) * 100) : 0;
     const itemsPerMin = totalTimeSec > 0 ? Math.round((gameImages.length / totalTimeSec) * 60) : 0;
 
@@ -319,7 +438,6 @@
     document.getElementById('res-accuracy').textContent = accuracy + '%';
     document.getElementById('res-speed').textContent = itemsPerMin + ' items/min';
 
-    // Performance rating
     const badge = document.getElementById('performance-badge');
     const badgeScore = document.getElementById('badge-score');
     
@@ -340,22 +458,20 @@
     showScreen(screenResults);
   }
 
-  // ─── Start Game ───
   function startGame(selectedLevel) {
     level = selectedLevel;
     speedSec = config.levels[level].speedSec;
 
-    // Reset
     gameImages = shuffle(config.images);
     currentIndex = 0;
     isPicked = false;
     pickedLabel = null;
     paused = false;
-    conveyorX = window.innerWidth; // start off-screen right
+    conveyorX = window.innerWidth;
     lastTimestamp = 0;
     results = [];
     spilloverChecked = new Set();
-    gameStartTime = Date.now(); // Track start time
+    gameStartTime = Date.now();
 
     hudLevel.textContent = `Level: ${config.levels[level].name}`;
     hudProgress.textContent = `0 / ${gameImages.length}`;
@@ -367,69 +483,50 @@
 
     showScreen(screenGame);
 
-    // Start animation after short delay
     setTimeout(() => {
       animationId = requestAnimationFrame(animate);
     }, 1000);
   }
 
   // ─── Event Listeners ───
+  btnConnectSerial.addEventListener('click', () => {
+    if (serialConnected) {
+      disconnectArduino();
+    } else {
+      connectArduino();
+    }
+  });
 
-  // Level buttons
   document.querySelectorAll('.btn-level[data-level]').forEach(btn => {
     btn.addEventListener('click', () => {
       startGame(parseInt(btn.dataset.level));
     });
   });
 
-  // Restart
   btnRestart.addEventListener('click', () => {
     showScreen(screenMenu);
   });
 
-  // On-screen pick button
   btnPick.addEventListener('click', () => doPick());
 
-  // On-screen drop buttons
   document.querySelectorAll('.drop-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       doDrop(parseInt(btn.dataset.node));
     });
   });
 
-  // Keyboard fallback
   document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
       e.preventDefault();
-      socket.emit('keyPress', { action: 'pick' });
+      doPick();
     } else if (['Digit1', 'Digit2', 'Digit3', 'Digit4'].includes(e.code)) {
       const node = parseInt(e.code.replace('Digit', ''));
-      socket.emit('keyPress', { action: 'drop', node });
+      doDrop(node);
     }
   });
 
-  // Socket events from Arduino (via server)
-  socket.on('button', (data) => {
-    if (data.action === 'pick') {
-      doPick();
-    } else if (data.action === 'drop') {
-      doDrop(data.node);
-    }
-  });
-
-  socket.on('serialStatus', (data) => {
-    if (data.connected) {
-      serialStatus.textContent = '✅ Arduino Connected';
-      serialStatus.className = 'status-badge connected';
-    } else {
-      serialStatus.textContent = '⚠️ Arduino Not Found (Keyboard Mode)';
-      serialStatus.className = 'status-badge disconnected';
-    }
-  });
-
-  // ─── Init ───
-  loadConfig().then(() => {
-    console.log('Config loaded:', config);
-  });
+  // ─── Initialize ───
+  console.log('🎮 Fluid Sorting Simulator initialized with Web Serial API');
+  updateSerialStatus(false);
 
 })();
