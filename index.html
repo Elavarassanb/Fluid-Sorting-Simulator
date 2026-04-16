@@ -66,6 +66,51 @@
       </div>
     </div>
   </div>
+<!-- In the menu screen, after level buttons -->
+<div class="menu-tabs">
+  <button id="tab-play" class="tab-btn active">🎮 Play Game</button>
+  <button id="tab-history" class="tab-btn">📊 Game History</button>
+</div>
+
+<div id="tab-content-play" class="tab-content active">
+  <!-- Existing level buttons and controls -->
+  <div class="level-buttons">
+    <!-- Your existing level buttons -->
+  </div>
+  <!-- Rest of existing menu content -->
+</div>
+
+<div id="tab-content-history" class="tab-content">
+  <div class="history-container">
+    <h2>📊 Game History</h2>
+    <div class="history-stats">
+      <div class="stat-item">
+        <span class="stat-label">Total Games:</span>
+        <span class="stat-value" id="total-games">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Best Accuracy:</span>
+        <span class="stat-value" id="best-accuracy">0%</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Average Score:</span>
+        <span class="stat-value" id="avg-accuracy">0%</span>
+      </div>
+    </div>
+    
+    <div class="history-list" id="history-list">
+      <div class="no-history">
+        <p>🎯 No games played yet</p>
+        <p>Play your first game to see results here!</p>
+      </div>
+    </div>
+    
+    <div class="history-actions">
+      <button id="btn-clear-history" class="btn-secondary">🗑️ Clear History</button>
+      <button id="btn-export-history" class="btn-secondary">📤 Export Data</button>
+    </div>
+  </div>
+</div>
 
   <!-- ════════ SCREEN 2: Game ════════ -->
   <div id="screen-game" class="screen">
@@ -247,21 +292,17 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="results-actions">
-        <button id="btn-restart" class="btn-restart">
-          <span class="btn-icon">🔄</span>
-          <span class="btn-text">Play Again</span>
-        </button>
-        <button id="btn-print-results" class="btn-secondary">
-          <span class="btn-icon">🖨️</span>
-          <span class="btn-text">Print Results</span>
-        </button>
-        <button id="btn-share-results" class="btn-secondary">
-          <span class="btn-icon">📤</span>
-          <span class="btn-text">Share Results</span>
-        </button>
-      </div>
-
+      <!-- Add this after the restart button in results screen -->
+        <div class="results-actions">
+          <button id="btn-restart" class="btn-restart">
+            <span class="btn-icon">🔄</span>
+            <span class="btn-text">Play Again</span>
+          </button>
+          <button id="btn-view-history" class="btn-secondary">
+            <span class="btn-icon">📊</span>
+            <span class="btn-text">View History</span>
+          </button>
+        </div>
       <!-- Training Tips -->
       <div class="training-tips">
         <details>
