@@ -39,7 +39,7 @@
   const LABEL_WIDTH = 200;
   const LABEL_GAP = 60;
   const LABEL_TOTAL = LABEL_WIDTH + LABEL_GAP;
-  const PICK_ZONE_TOLERANCE = 130;
+  const PICK_ZONE_TOLERANCE = 300;
 
   // ─── Embedded Config (No Server Needed) ───
   config = {
