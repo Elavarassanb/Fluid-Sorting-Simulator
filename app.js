@@ -804,8 +804,309 @@
       }
     },
 
-    end() {
+        end() {
       if (state.animationId) {
         cancelAnimationFrame(state.animationId);
         state.animationId = null;
+      }
+
+      // Process remaining items
+      state.gameImages.forEach((img, idx) => {
+        if (!state.spilloverChecked.has(idx)) {
+          if (img.node !== null) {
+            state.results.push({ file: img.file, node: img.node, action: 'spillover', droppedNode: null });
+          } else {
+            state.results.push({ file: img.file, node: null, action: 'ignored', droppedNode: null });
+          }
+        }
+      });
+
+      this.showResults();
+    },
+
+    showResults() {
+      state.gameEndTime = Date.now();
+      const totalTimeMs = state.gameEndTime - state.gameStartTime;
+      const totalTimeSec = Math.round(totalTimeMs / 1000);
+
+      const correct = state.results.filter(r => r.action === 'correct').length;
+      const missorted = state.results.filter(r => r.action === 'missorted').length;
+      const spillover = state.results.filter(r => r.action === 'spillover').length;
+      const falsepick = state.results.filter(r => r.action === 'falsepick').length;
+      const ignored = state.results.filter(r => r.action === 'ignored').length;
+      const totalRelevant = state.gameImages.filter(i => i.node !== null).length;
+
+      // Update result elements
+      const resultElements = {
+        'res-correct': correct,
+        'res-missorted': missorted,
+        'res-spillover': spillover,
+        'res-falsepick': falsepick,
+        'res-ignored': ignored,
+        'res-total-time': utils.formatTime(totalTimeSec)
+      };
+
+      Object.entries(resultElements).forEach(([id, value]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      });
+
+      const accuracy = totalRelevant > 0 ? Math.round((correct / totalRelevant) * 100) : 0;
+      const accuracyEl = document.getElementById('res-accuracy');
+      if (accuracyEl) accuracyEl.textContent = accuracy + '%';
+
+      // Performance rating
+      let performance = 'poor';
+      let description = 'Keep practicing to improve!';
+      
+      if (accuracy >= 90) {
+        performance = 'excellent';
+        description = 'Outstanding sorting performance!';
+      } else if (accuracy >= 75) {
+        performance = 'good';
+        description = 'Good job! Room for improvement.';
+      } else if (accuracy >= 50) {
+        performance = 'average';
+        description = 'Average performance. Practice more!';
+      }
+
+      if (elements.performanceBadge) {
+        elements.performanceBadge.className = `performance-badge ${performance}`;
+      }
+      if (elements.badgeScore) elements.badgeScore.textContent = performance.charAt(0).toUpperCase() + performance.slice(1);
+      if (elements.badgeDescription) elements.badgeDescription.textContent = description;
+
+      // Add to history
+      history.add({
+        totalTime: totalTimeSec,
+        accuracy: accuracy,
+        correct: correct,
+        missorted: missorted,
+        spillover: spillover,
+        falsepick: falsepick,
+        ignored: ignored,
+        totalRelevant: totalRelevant,
+        performance: performance
+      });
+
+      ui.showScreen(elements.screenResults);
+    }
+  };
+
+  // ═══ HISTORY MANAGEMENT ═══
+  const history = {
+    add(gameResult) {
+      const historyEntry = {
+        id: Date.now(),
+        date: new Date().toISOString(),
+        level: state.level,
+        levelName: state.config.levels[state.level].name,
+        speedSec: state.speedSec,
+        ...gameResult
+      };
+      
+      state.gameHistory.unshift(historyEntry);
+      
+      if (state.gameHistory.length > CONSTANTS.MAX_HISTORY_ENTRIES) {
+        state.gameHistory = state.gameHistory.slice(0, CONSTANTS.MAX_HISTORY_ENTRIES);
+      }
+      
+      storage.saveHistory();
+      ui.updateHistoryDisplay();
+    },
+
+    clear() {
+      if (confirm('Are you sure you want to clear all game history?')) {
+        state.gameHistory = [];
+        localStorage.removeItem(CONSTANTS.STORAGE_KEYS.HISTORY);
+        ui.updateHistoryDisplay();
+        ui.showMessage('History cleared successfully');
+      }
+    },
+
+    export() {
+      if (state.gameHistory.length === 0) {
+        ui.showMessage('No history to export!', 'error');
+        return;
+      }
+      
+      const csv = [
+        'Date,Level,Accuracy,Correct,Missorted,Spillover,FalsePick,Time',
+        ...state.gameHistory.map(g => {
+          const date = new Date(g.date).toISOString().split('T')[0];
+          return `${date},${g.levelName},${g.accuracy}%,${g.correct},${g.missorted},${g.spillover},${g.falsepick},${g.totalTime}s`;
+        })
+      ].join('\n');
+      
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'fluid-sorting-history.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  };
+
+  // ═══ EVENT HANDLERS ═══
+  const events = {
+    init() {
+      // Hardware connection
+      if (elements.btnConnectHw) {
+        elements.btnConnectHw.addEventListener('click', () => {
+          if (state.serialConnected) {
+            serial.disconnect();
+          } else {
+            serial.connect();
+          }
+        });
+      }
+
+      if (elements.btnTestHw) {
+        elements.btnTestHw.addEventListener('click', () => serial.test());
+      }
+
+      // Tab management
+      if (elements.tabPlay) {
+        elements.tabPlay.addEventListener('click', () => ui.switchTab('play'));
+      }
+      
+      if (elements.tabHistory) {
+        elements.tabHistory.addEventListener('click', () => ui.switchTab('history'));
+      }
+
+      // Level selection
+      document.querySelectorAll('.level-btn[data-level]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          game.start(parseInt(btn.dataset.level));
+        });
+      });
+
+      // Level cards
+      document.querySelectorAll('.level-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const level = parseInt(card.dataset.level);
+          if (level) game.start(level);
+        });
+        
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const level = parseInt(card.dataset.level);
+            if (level) game.start(level);
+          }
+        });
+      });
+
+      // Game controls
+      if (elements.btnPick) {
+        elements.btnPick.addEventListener('click', () => game.pick());
+      }
+
+      if (elements.btnRestart) {
+        elements.btnRestart.addEventListener('click', () => {
+          ui.showScreen(elements.screenMenu);
+          ui.switchTab('play');
+        });
+      }
+
+      document.querySelectorAll('.drop-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          game.drop(parseInt(btn.dataset.node));
+        });
+      });
+
+      // Quick actions
+      if (elements.btnRandom) {
+        elements.btnRandom.addEventListener('click', () => {
+          const randomLevel = Math.floor(Math.random() * 4) + 1;
+          game.start(randomLevel);
+        });
+      }
+
+      if (elements.btnTutorial) {
+        elements.btnTutorial.addEventListener('click', () => {
+          ui.showMessage('Tutorial mode coming soon!');
+        });
+      }
+
+      if (elements.btnCustom) {
+        elements.btnCustom.addEventListener('click', () => {
+          ui.showMessage('Custom settings coming soon!');
+        });
+      }
+
+      // History actions
+      if (elements.btnClearHistory) {
+        elements.btnClearHistory.addEventListener('click', history.clear);
+      }
+      
+      if (elements.btnExportHistory) {
+        elements.btnExportHistory.addEventListener('click', history.export);
+      }
+
+      // Modal management
+      document.querySelectorAll('.modal-close').forEach(closeBtn => {
+        closeBtn.addEventListener('click', (e) => {
+          const modal = e.target.closest('.modal');
+          if (modal) modal.style.display = 'none';
+        });
+      });
+
+      // Keyboard controls
+      document.addEventListener('keydown', (e) => {
+        if (!elements.screenGame?.classList.contains('active')) return;
+        
+        if (e.code === 'Space') {
+          e.preventDefault();
+          game.pick();
+        } else if (['Digit1', 'Digit2', 'Digit3', 'Digit4'].includes(e.code)) {
+          e.preventDefault();
+          const node = parseInt(e.code.replace('Digit', ''));
+          game.drop(node);
+        }
+      });
+    }
+  };
+
+  // ═══ INITIALIZATION ═══
+  function initialize() {
+    console.log('🎮 Fluid Sorting Simulator initializing...');
+    
+    // Load data
+    storage.loadHistory();
+    storage.loadSettings();
+    
+    // Initialize UI
+    ui.updateHardwareStatus(false);
+    ui.updateARIA();
+    ui.switchTab('play');
+    
+    // Setup events
+    events.init();
+    
+    // Check Web Serial support
+    if (!('serial' in navigator)) {
+      console.warn('Web Serial API not supported');
+      ui.showError('Web Serial API not supported. Please use Chrome or Edge browser.');
+    }
+    
+    console.log('✅ Application ready');
+  }
+
+  // ═══ START APPLICATION ═══
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialize);
+  } else {
+    initialize();
+  }
+
+  // ═══ CLEANUP ═══
+  window.addEventListener('beforeunload', () => {
+    if (state.serialConnected) serial.disconnect();
+    if (state.animationId) cancelAnimationFrame(state.animationId);
+  });
+
+})();
+
 
