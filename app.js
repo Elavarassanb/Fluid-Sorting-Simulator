@@ -17,7 +17,6 @@
   const btnBackToMenu = document.getElementById('btn-back-to-menu');
   const btnClearHistory = document.getElementById('btn-clear-history');
   const historyContent = document.getElementById('history-content');
-  const btnBackToMenu = document.getElementById('btn-back-to-menu');
   const historyContent = document.getElementById('history-content');
 
   // ─── Web Serial API Variables ───
