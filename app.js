@@ -1,9 +1,8 @@
 (() => {
-  // âââ DOM Elements âââ
+  // ─── DOM Elements ───
   const screenMenu = document.getElementById('screen-menu');
   const screenGame = document.getElementById('screen-game');
   const screenResults = document.getElementById('screen-results');
-  const screenHistory = document.getElementById('screen-history');
   const serialStatusWeb = document.getElementById('serial-status-web');
   const btnConnectSerial = document.getElementById('btn-connect-serial');
   const conveyorTrack = document.getElementById('conveyor-track');
@@ -13,17 +12,13 @@
   const hudTimer = document.getElementById('hud-timer');
   const btnPick = document.getElementById('btn-pick');
   const btnRestart = document.getElementById('btn-restart');
-  const btnHistory = document.getElementById('btn-history');
-  const btnBackToMenu = document.getElementById('btn-back-to-menu');
-  const btnClearHistory = document.getElementById('btn-clear-history');
-  const historyContent = document.getElementById('history-content');
 
-  // âââ Web Serial API Variables âââ
+  // ─── Web Serial API Variables ───
   let serialPort = null;
   let serialReader = null;
   let serialConnected = false;
 
-  // âââ Game State âââ
+  // ─── Game State ───
   let config = null;
   let gameImages = [];
   let currentIndex = 0;
@@ -39,15 +34,14 @@
   let gameEndTime = 0;
   let results = [];
   let spilloverChecked = new Set();
-  let gameHistory = JSON.parse(localStorage.getItem('fluidSortingHistory') || '[]');
 
-  // âââ Constants âââ
-  const LABEL_WIDTH = 800;
+  // ─── Constants ───
+  const LABEL_WIDTH = 200;
   const LABEL_GAP = 60;
   const LABEL_TOTAL = LABEL_WIDTH + LABEL_GAP;
-  const PICK_ZONE_TOLERANCE = 800;
+  const PICK_ZONE_TOLERANCE = 130;
 
-  // âââ Embedded Config (No Server Needed) âââ
+  // ─── Embedded Config (No Server Needed) ───
   config = {
     "images": [
       { "file": "label_01.png", "node": 1 },
@@ -99,7 +93,7 @@
     }
   };
 
-  // âââ Web Serial API Functions âââ
+  // ─── Web Serial API Functions ───
   async function connectArduino() {
     if (!('serial' in navigator)) {
       alert('Web Serial API not supported. Use Chrome/Edge browser with HTTPS or localhost.');
@@ -118,7 +112,7 @@
         parity: 'none'
       });
 
-      console.log('â Arduino connected via Web Serial API');
+      console.log('✅ Arduino connected via Web Serial API');
       serialConnected = true;
       updateSerialStatus(true);
 
@@ -126,7 +120,7 @@
       startSerialReader();
 
     } catch (error) {
-      console.error('â Serial connection failed:', error);
+      console.error('❌ Serial connection failed:', error);
       updateSerialStatus(false, error.message);
     }
   }
@@ -148,7 +142,7 @@
         lines.forEach(line => {
           const cmd = line.trim();
           if (cmd) {
-            console.log('ð Arduino:', cmd);
+            console.log('🔘 Arduino:', cmd);
             handleArduinoCommand(cmd);
           }
         });
@@ -166,7 +160,7 @@
     } else if (['1', '2', '3', '4'].includes(cmd)) {
       doDrop(parseInt(cmd));
     } else if (cmd === 'READY') {
-      console.log('ð¤ Arduino ready');
+      console.log('🤖 Arduino ready');
     }
   }
 
@@ -183,28 +177,28 @@
     
     serialConnected = false;
     updateSerialStatus(false);
-    console.log('ð´ Arduino disconnected');
+    console.log('📴 Arduino disconnected');
   }
 
   function updateSerialStatus(connected, error = null) {
     if (connected) {
-      serialStatusWeb.textContent = 'â Arduino Connected';
+      serialStatusWeb.textContent = '✅ Arduino Connected';
       serialStatusWeb.className = 'status-badge connected';
-      btnConnectSerial.textContent = 'ð´ Disconnect Arduino';
+      btnConnectSerial.textContent = '📴 Disconnect Arduino';
     } else {
-      serialStatusWeb.textContent = error ? `â Error: ${error}` : 'â Arduino Not Connected';
+      serialStatusWeb.textContent = error ? `❌ Error: ${error}` : '❌ Arduino Not Connected';
       serialStatusWeb.className = 'status-badge disconnected';
-      btnConnectSerial.textContent = 'ð Connect Arduino';
+      btnConnectSerial.textContent = '🔌 Connect Arduino';
     }
   }
 
-  // âââ Screen Management âââ
+  // ─── Screen Management ───
   function showScreen(screen) {
-    [screenMenu, screenGame, screenResults, screenHistory].forEach(s => s.classList.remove('active'));
+    [screenMenu, screenGame, screenResults].forEach(s => s.classList.remove('active'));
     screen.classList.add('active');
   }
 
-  // âââ Utility Functions âââ
+  // ─── Utility Functions ───
   function shuffle(arr) {
     const a = [...arr];
     for (let i = a.length - 1; i > 0; i--) {
@@ -214,44 +208,23 @@
     return a;
   }
 
-  // âââ Game Functions âââ
+  // ─── Game Functions (Same as before) ───
   function buildConveyor() {
-  conveyorTrack.innerHTML = '';
-  gameImages.forEach((img, idx) => {
-    const div = document.createElement('div');
-    div.className = 'conveyor-label';
-    div.dataset.index = idx;
-    if (img.node === null) div.classList.add('irrelevant');
+    conveyorTrack.innerHTML = '';
+    gameImages.forEach((img, idx) => {
+      const div = document.createElement('div');
+      div.className = 'conveyor-label';
+      div.dataset.index = idx;
+      if (img.node === null) div.classList.add('irrelevant');
 
-    // Create placeholder content
-    const labelEl = document.createElement('div');
-    labelEl.className = 'label-placeholder';
-    
-    const labelContent = document.createElement('div');
-    labelContent.className = 'label-content';
-    
-    const labelTitle = document.createElement('div');
-    labelTitle.className = 'label-title';
-    labelTitle.textContent = img.file;
-    
-    const labelNode = document.createElement('div');
-    labelNode.className = 'label-node';
-    labelNode.textContent = `Node: ${img.node || 'N/A'}`;
-    
-    const labelType = document.createElement('div');
-    labelType.className = 'label-type';
-    labelType.textContent = img.node ? 'RELEVANT' : 'IGNORE';
-    
-    // Assemble the structure
-    labelContent.appendChild(labelTitle);
-    labelContent.appendChild(labelNode);
-    labelContent.appendChild(labelType);
-    labelEl.appendChild(labelContent);
-    div.appendChild(labelEl);
+      const imgEl = document.createElement('img');
+      imgEl.src = `images/${img.file}`;
+      imgEl.alt = img.file;
+      div.appendChild(imgEl);
 
-    conveyorTrack.appendChild(div);
-  });
-}
+      conveyorTrack.appendChild(div);
+    });
+  }
 
   function getLabelInPickZone() {
     const conveyorRect = document.getElementById('conveyor').getBoundingClientRect();
@@ -365,7 +338,7 @@
     label.classList.add('picked');
     label.classList.remove('in-pick-zone');
 
-    hudStatus.textContent = 'ð¦ PICKED â Drop to Node 1-4';
+    hudStatus.textContent = '📦 PICKED — Drop to Node 1-4';
     hudStatus.className = 'status-picked';
   }
 
@@ -419,7 +392,7 @@
   }
 
   function updateHUD() {
-    hudTimer.textContent = `â± ${speedSec}s/label`;
+    hudTimer.textContent = `⏱ ${speedSec}s/label`;
   }
 
   function endGame() {
@@ -438,83 +411,7 @@
     showResults();
   }
 
-  // âââ History Functions âââ
-  function saveGameToHistory() {
-    const gameEndTime = Date.now();
-    const totalTimeMs = gameEndTime - gameStartTime;
-    const totalTimeSec = Math.round(totalTimeMs / 1000);
-    
-    const correct = results.filter(r => r.action === 'correct').length;
-    const missorted = results.filter(r => r.action === 'missorted').length;
-    const spillover = results.filter(r => r.action === 'spillover').length;
-    const falsepick = results.filter(r => r.action === 'falsepick').length;
-    const totalRelevant = gameImages.filter(i => i.node !== null).length;
-    const accuracy = totalRelevant > 0 ? Math.round((correct / totalRelevant) * 100) : 0;
-    
-    const historyItem = {
-      date: new Date().toLocaleString(),
-      level: level,
-      levelName: config.levels[level].name,
-      totalTime: totalTimeSec,
-      accuracy: accuracy,
-      correct: correct,
-      missorted: missorted,
-      spillover: spillover,
-      falsepick: falsepick,
-      totalItems: gameImages.length
-    };
-    
-    gameHistory.unshift(historyItem);
-    if (gameHistory.length > 50) gameHistory.pop();
-    localStorage.setItem('fluidSortingHistory', JSON.stringify(gameHistory));
-  }
-
-  function showHistoryScreen() {
-    showScreen(screenHistory);
-    renderHistory();
-  }
-
-  function renderHistory() {
-    if (!historyContent) return;
-    
-    if (gameHistory.length === 0) {
-      historyContent.innerHTML = '<div class="no-history"><p>No games played yet. Start playing to see your history!</p></div>';
-      return;
-    }
-    
-    const historyHTML = gameHistory.map(game => `
-      <div class="history-item">
-        <div class="history-item-header">
-          <span class="history-date">${game.date}</span>
-          <span class="history-level">${game.levelName}</span>
-        </div>
-        <div class="history-stats">
-          <div class="history-stat">
-            <div class="history-stat-value">${game.accuracy}%</div>
-            <div class="history-stat-label">Accuracy</div>
-          </div>
-          <div class="history-stat">
-            <div class="history-stat-value">${game.correct}</div>
-            <div class="history-stat-label">Correct</div>
-          </div>
-          <div class="history-stat">
-            <div class="history-stat-value">${Math.floor(game.totalTime / 60)}:${(game.totalTime % 60).toString().padStart(2, '0')}</div>
-            <div class="history-stat-label">Time</div>
-          </div>
-          <div class="history-stat">
-            <div class="history-stat-value">${game.totalItems}</div>
-            <div class="history-stat-label">Items</div>
-          </div>
-        </div>
-      </div>
-    `).join('');
-    
-    historyContent.innerHTML = historyHTML;
-  }
-
   function showResults() {
-    saveGameToHistory(); // Save game to history
-    
     gameEndTime = Date.now();
     const totalTimeMs = gameEndTime - gameStartTime;
     const totalTimeSec = Math.round(totalTimeMs / 1000);
@@ -591,7 +488,7 @@
     }, 1000);
   }
 
-  // âââ Event Listeners âââ
+  // ─── Event Listeners ───
   btnConnectSerial.addEventListener('click', () => {
     if (serialConnected) {
       disconnectArduino();
@@ -618,30 +515,6 @@
     });
   });
 
-  // History event listeners
-  if (btnHistory) {
-    btnHistory.addEventListener('click', (e) => {
-      e.preventDefault();
-      showHistoryScreen();
-    });
-  }
-
-  if (btnBackToMenu) {
-    btnBackToMenu.addEventListener('click', () => {
-      showScreen(screenMenu);
-    });
-  }
-
-  if (btnClearHistory) {
-    btnClearHistory.addEventListener('click', () => {
-      if (confirm('Are you sure you want to clear all game history?')) {
-        gameHistory = [];
-        localStorage.removeItem('fluidSortingHistory');
-        showHistoryScreen();
-      }
-    });
-  }
-
   document.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
       e.preventDefault();
@@ -652,8 +525,8 @@
     }
   });
 
-  // âââ Initialize âââ
-  console.log('ð® Fluid Sorting Simulator initialized with Web Serial API');
+  // ─── Initialize ───
+  console.log('🎮 Fluid Sorting Simulator initialized with Web Serial API');
   updateSerialStatus(false);
 
 })();
