@@ -1,1053 +1,363 @@
- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fluid Sorting Simulator - Web Serial</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏭</text></svg>">
+</head>
+<body>
 
-
-    
-    
-    <title>Fluid Sorting Simulator</title>
-    
-    
-    
-    
-
-
-    
-    <div id="loading-overlay" class="loading-overlay" style="display: none;">
-        <div class="loading-spinner"></div>
-        <p>Loading Fluid Sorting Simulator...</p>
-    </div>
-
-    
-    <div class="app-container">
-        
-        
-        <header class="app-header">
-            <div class="header-content">
-                <div class="app-logo">
-                    <span class="logo-icon">🧪</span>
-                    <h1 class="app-title">Fluid Sorting Simulator</h1>
-                </div>
-                
-                <nav class="tab-navigation">
-                    <button class="tab-btn active" id="tab-play">
-                        <span>🎮</span>
-                        Training
-                    </button>
-                    <button class="tab-btn" id="tab-history">
-                        <span>📊</span>
-                        History
-                    </button>
-                </nav>
-                
-                <div class="header-actions">
-                    <button id="btn-about" class="header-btn">
-                        <span>ℹ️</span>
-                        About
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        
-        <main class="main-content">
-            
-            
-            <section id="content-play" class="tab-content active">
-                
-                
-                <div class="training-hero">
-                    <div class="hero-content">
-                        <h1>Sorting Training Center</h1>
-                        <p>Master the art of fluid sorting with progressive difficulty levels designed to enhance your skills and precision.</p>
-                        <div class="hero-cta">
-                            <a href="#levels" class="cta-button primary">
-                                <span>🚀</span>
-                                Start Training
-                            </a>
-                            <a href="#tutorial" class="cta-button">
-                                <span>📚</span>
-                                View Tutorial
-                            </a>
-                        </div>
-                    </div>
-                    <div class="hero-visual">
-                        <div class="hero-animation">
-                            <div class="floating-elements">
-                                <div class="floating-element">1</div>
-                                <div class="floating-element">2</div>
-                                <div class="floating-element">3</div>
-                                <div class="floating-element">4</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                
-                <div class="hardware-status">
-                    <div class="status-card" id="hardware-card">
-                        <div class="status-visual">
-                            <div class="device-icon">🔌</div>
-                            <div class="connection-indicator" id="connection-indicator"></div>
-                        </div>
-                        <div class="status-info">
-                            <h3 id="hw-status-title">Hardware Status</h3>
-                            <p id="hw-status-desc">Connect your Arduino device to begin training</p>
-                            <div class="status-actions">
-                                <button id="btn-connect-hw" class="connect-btn">
-                                    <span>⚡</span>
-                                    Connect Device
-                                </button>
-                                <button id="btn-test-hw" class="connect-btn secondary" style="display: none;">
-                                    <span>🔧</span>
-                                    Test Connection
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                
-                <div class="level-selection-container" id="levels">
-                    <div class="section-header">
-                        <h2>Choose Your Challenge</h2>
-                        <p>Select a difficulty level that matches your current skill level and training goals</p>
-                    </div>
-
-                    <div class="levels-grid">
-                        
-                        
-                        <div class="level-card beginner" data-level="1" tabindex="0">
-                            <div class="level-badge">
-                                <span class="badge-icon">🌱</span>
-                                <span class="badge-text">Beginner</span>
-                            </div>
-                            
-                            <div class="level-header">
-                                <div class="level-icon-large">🟢</div>
-                                <div class="difficulty-visualization">
-                                    <div class="difficulty-meter">
-                                        <div class="meter-fill" style="width: 25%"></div>
-                                    </div>
-                                    <div class="difficulty-label">Easy</div>
-                                </div>
-                            </div>
-                            
-                            <div class="level-details">
-                                <h3>Getting Started</h3>
-                                <p>Perfect for first-time users. Take your time to learn the basics of sorting with generous time limits.</p>
-                                
-                                <div class="level-specs">
-                                    <div class="spec-item">
-                                        <span class="spec-icon">⏱️</span>
-                                        <div class="spec-info">
-                                            <div class="spec-value">10s</div>
-                                            <div class="spec-label">per item</div>
-                                        </div>
-                                    </div>
-                                    <div class="spec-item">
-                                        <span class="spec-icon">📦</span>
-                                        <div class="spec-info">
-                                            <div class="spec-value">40</div>
-                                            <div class="spec-label">items</div>
-                                        </div>
-                                    </div>
-                                    <div class="spec-item">
-                                        <span class="spec-icon">🎯</span>
-                                        <div class="spec-info">
-                                            <div class="spec-value">~7min</div>
-                                            <div class="spec-label">duration</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="level-stats">
-                                    <div class="stats-grid">
-                                        <div class="stat-item">
-                                            <span class="stat-value" id="beginner-success">--</span>
-                                            <span class="stat-label">Success Rate</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-value" id="beginner-time">--</span>
-                                            <span class="stat-label">Best Time</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-value" id="beginner-attempts">0</span>
-                                            <span class="stat-label">Attempts</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="level-actions">
-                                <button class="level-btn" data-level="1">
-                                    <span>🚀</span>
-                                    Start Training
-                                </button>
-                            </div>
-                        </div>
-
-                        
-                        <div class="level-card intermediate" data-level="2" tabindex="0">
-                            <div class="level-badge">
-                                <span class="badge-icon">⚡</span>
-                                <span class="badge-text">Intermediate</span>
-                            </div>
-                            
-                            <div class="level-header">
-                                <div class="level-icon-large">🟡</div>
-                                <div class="difficulty-visualization">
-                                    <div class="difficulty-meter">
-                                        <div class="meter-fill" style="width: 50%"></div>
-                                    </div>
-                                    <div class="difficulty-label">Moderate</div>
-                                </div>
-                            </div>
-                            
-                            <div class="level-details">
-                                <h3>Building Skills</h3>
-                                <p>Step up the pace with moderate time pressure. Good for users with basic sorting experience.</p>
-                                
-                                <div class="level-specs">
-                                    <div class="spec-item">
-                                        <span class="spec-icon">⏱️</span>
-                                        <div class="spec-info">
-                                            <div class="spec-value">7s</div>
-                                            <div class="spec-label">per item</div>
-                                        </div>
-                                    </div>
-                                    <div class="spec-item">
-                                        <span class="spec-icon">📦</span>
-                                        <div class="spec-info">
-                                            <div class="spec-value">40</div>
-                                            <div class="spec-label">items</div>
-                                        </div>
-                                    </div>
-                                    <div class="spec-item">
-                                        <span class="spec-icon">🎯</span>
-                                        <div class="spec-info">
-                                            <div class="spec-value">~5min</div>
-                                            <div class="spec-label">duration</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="level-stats">
-                                    <div class="stats-grid">
-                                        <div class="stat-item">
-                                            <span class="stat-value" id="intermediate-success">--</span>
-                                            <span class="stat-label">Success Rate</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-value" id="intermediate-time">--</span>
-                                            <span class="stat-label">Best Time</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-value" id="intermediate-attempts">0</span>
-                                            <span class="stat-label">Attempts</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="level-actions">
-                                <button class="level-btn" data-level="2">
-                                    <span>⚡</span>
-                                    Start Training
-                                </button>
-                            </div>
-                        </div>
-
-                        
-                        <div class="level-card advanced" data-level="3" tabindex="0">
-                            <div class="level-badge">
-                                <span class="badge-icon">🔥</span>
-                                <span class="badge-text">Advanced</span>
-                            </div>
-                            
-                            <div class="level-header">
-                                <div class="level-icon-large">🟠</div>
-                                <div class="difficulty-visualization">
-                                    <div class="difficulty-meter">
-                                        <div class="meter-fill" style="width: 75%"></div>
-                                    </div>
-                                    <div class="difficulty-label">Hard</div>
-                                </div>
-                            </div>
-                            
-                            <div class="level-details">
-                                <h3>Skilled Operator</h3>
-                                <p>Fast-paced sorting for experienced users. Precision and speed are both required for success.</p>
-                                
-                                <div class="level-specs">
-                                    <div class="spec-item">
-                                        <span class="spec-icon">⏱️</span>
-                                        <div class="spec-info">
-                                            <div class="spec-value">5s</div>
-                                            <div class="spec-label">per item</div>
-                                        </div>
-                                    </div>
-                                    <div class="spec-item">
-                                        <span class="spec-icon">📦</span>
-                                        <div class="spec-info">
-                                            <div class="spec-value">40</div>
-                                            <div class="spec-label">items</div>
-                                        </div>
-                                    </div>
-                                    <div class="spec-item">
-                                        <span class="spec-icon">🎯</span>
-                                        <div class="spec-info">
-                                            <div class="spec-value">~3min</div>
-                                            <div class="spec-label">duration</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="level-stats">
-                                    <div class="stats-grid">
-                                        <div class="stat-item">
-                                            <span class="stat-value" id="advanced-success">--</span>
-                                            <span class="stat-label">Success Rate</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-value" id="advanced-time">--</span>
-                                            <span class="stat-label">Best Time</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-value" id="advanced-attempts">0</span>
-                                            <span class="stat-label">Attempts</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="level-actions">
-                                <button class="level-btn" data-level="3">
-                                    <span>🔥</span>
-                                    Start Training
-                                </button>
-                            </div>
-                        </div>
-
-                        
-                        <div class="level-card expert" data-level="4" tabindex="0">
-                            <div class="level-badge premium">
-                                <span class="badge-icon">👑</span>
-                                <span class="badge-text">Expert</span>
-                            </div>
-                            
-                            <div class="level-header">
-                                <div class="level-icon-large">🔴</div>
-                                <div class="difficulty-visualization">
-                                    <div class="difficulty-meter">
-                                        <div class="meter-fill" style="width: 100%"></div>
-                                    </div>
-                                    <div class="difficulty-label">Expert</div>
-                                </div>
-                            </div>
-                            
-                            <div class="level-details">
-                                <h3>Master Level</h3>
-                                <p>Ultimate challenge for sorting masters. Lightning-fast decisions and flawless execution required.</p>
-                                
-                                <div class="level-specs">
-                                    <div class="spec-item">
-                                        <span class="spec-icon">⏱️</span>
-                                        <div class="spec-info">
-                                            <div class="spec-value">3s</div>
-                                            <div class="spec-label">per item</div>
-                                        </div>
-                                    </div>
-                                    <div class="spec-item">
-                                        <span class="spec-icon">📦</span>
-                                        <div class="spec-info">
-                                            <div class="spec-value">40</div>
-                                            <div class="spec-label">items</div>
-                                        </div>
-                                    </div>
-                                    <div class="spec-item">
-                                        <span class="spec-icon">🎯</span>
-                                        <div class="spec-info">
-                                            <div class="spec-value">~2min</div>
-                                            <div class="spec-label">duration</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="level-stats">
-                                    <div class="stats-grid">
-                                        <div class="stat-item">
-                                            <span class="stat-value" id="expert-success">--</span>
-                                            <span class="stat-label">Success Rate</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-value" id="expert-time">--</span>
-                                            <span class="stat-label">Best Time</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-value" id="expert-attempts">0</span>
-                                            <span class="stat-label">Attempts</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="level-actions">
-                                <button class="level-btn premium" data-level="4">
-                                    <span>👑</span>
-                                    Master Challenge
-                                </button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                
-                <div class="quick-actions">
-                    <div class="action-card" tabindex="0">
-                        <div class="action-icon">🎲</div>
-                        <div class="action-content">
-                            <h4>Random Challenge</h4>
-                            <p>Let the system pick a difficulty level for you based on your performance</p>
-                        </div>
-                        <button class="action-btn" id="btn-random">
-                            <span>🎲</span>
-                            Try Random
-                        </button>
-                    </div>
-                    
-                    <div class="action-card" tabindex="0" id="tutorial">
-                        <div class="action-icon">📚</div>
-                        <div class="action-content">
-                            <h4>Interactive Tutorial</h4>
-                            <p>Learn sorting techniques with step-by-step guided instructions</p>
-                        </div>
-                        <button class="action-btn" id="btn-tutorial">
-                            <span>📚</span>
-                            Start Tutorial
-                        </button>
-                    </div>
-                    
-                    <div class="action-card" tabindex="0">
-                        <div class="action-icon">⚙️</div>
-                        <div class="action-content">
-                            <h4>Custom Training</h4>
-                            <p>Create personalized difficulty settings and training parameters</p>
-                        </div>
-                        <button class="action-btn" id="btn-custom">
-                            <span>⚙️</span>
-                            Customize
-                        </button>
-                    </div>
-                </div>
-
-                
-                <div class="loading-placeholder skeleton" style="display: none;" id="loading-placeholder">
-                    <div class="skeleton-text large"></div>
-                    <div class="skeleton-text"></div>
-                    <div class="skeleton-text short"></div>
-                </div>
-
-            </section>
-
-            
-            <section id="content-history" class="tab-content">
-                <div class="section-header">
-                    <h2>Training History</h2>
-                    <p>Track your progress and performance over time with detailed analytics</p>
-                </div>
-
-                
-                <div class="history-summary">
-                    <div class="summary-card">
-                        <div class="summary-value" id="total-games">0</div>
-                        <div class="summary-label">Total Games</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-value" id="best-accuracy">0%</div>
-                        <div class="summary-label">Best Accuracy</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="summary-value" id="avg-accuracy">0%</div>
-                        <div class="summary-label">Average Accuracy</div>
-                    </div>
-                </div>
-
-                
-                <div class="history-actions">
-                    <button id="btn-clear-history" class="history-btn danger">
-                        <span>🗑️</span>
-                        Clear History
-                    </button>
-                    <button id="btn-export-history" class="history-btn">
-                        <span>📊</span>
-                        Export CSV
-                    </button>
-                </div>
-
-                
-                <div class="history-container">
-                    <div id="history-list" class="history-list">
-                        <div class="no-history">
-                            <p>🎯 No games played yet</p>
-                            <p>Play your first game to see results here!</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            
-            <section id="screen-game" class="game-screen">
-                <div class="game-header">
-                    <div class="game-hud">
-                        <div class="hud-item">
-                            <span class="hud-label">Level</span>
-                            <span id="hud-level" class="hud-value">Beginner</span>
-                        </div>
-                        <div class="hud-item">
-                            <span class="hud-label">Progress</span>
-                            <span id="hud-progress" class="hud-value">0 / 40</span>
-                        </div>
-                        <div class="hud-item">
-                            <span class="hud-label">Status</span>
-                            <span id="hud-status" class="hud-value status-idle">READY</span>
-                        </div>
-                        <div class="hud-item">
-                            <span class="hud-label">Speed</span>
-                            <span id="hud-timer" class="hud-value">10s/item</span>
-                        </div>
-                        <div class="hud-item">
-                            <span class="hud-label">Hardware</span>
-                            <span id="hud-arduino-status" class="hud-value">🔗 ✗</span>
-                        </div>
-                    </div>
-                    <button id="btn-exit-game" class="exit-btn">
-                        <span>←</span>
-                        Back to Menu
-                    </button>
-                </div>
-
-                <div class="game-area">
-                    <div class="conveyor-container">
-                        <div id="conveyor" class="conveyor">
-                            <div class="pick-zone">
-                                <div class="pick-zone-indicator">PICK ZONE</div>
-                            </div>
-                            <div id="conveyor-track" class="conveyor-track"></div>
-                        </div>
-                    </div>
-
-                    <div class="game-controls">
-                        <div class="control-section">
-                            <h4>Pick Control</h4>
-                            <button id="btn-pick" class="control-btn pick-btn">
-                                <span class="btn-icon">📦</span>
-                                <span class="btn-text">PICK</span>
-                                <span class="btn-key">(Space)</span>
-                            </button>
-                        </div>
-                        
-                        <div class="control-section">
-                            <h4>Drop Controls</h4>
-                            <div class="drop-controls">
-                                <button class="control-btn drop-btn" data-node="1">
-                                    <span class="btn-icon">1️⃣</span>
-                                    <span class="btn-text">Node 1</span>
-                                    <span class="btn-key">(1)</span>
-                                </button>
-                                <button class="control-btn drop-btn" data-node="2">
-                                    <span class="btn-icon">2️⃣</span>
-                                    <span class="btn-text">Node 2</span>
-                                    <span class="btn-key">(2)</span>
-                                </button>
-                                <button class="control-btn drop-btn" data-node="3">
-                                    <span class="btn-icon">3️⃣</span>
-                                    <span class="btn-text">Node 3</span>
-                                    <span class="btn-key">(3)</span>
-                                </button>
-                                <button class="control-btn drop-btn" data-node="4">
-                                    <span class="btn-icon">4️⃣</span>
-                                    <span class="btn-text">Node 4</span>
-                                    <span class="btn-key">(4)</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="game-instructions">
-                    <div class="instruction-item">
-                        <span class="instruction-icon">🎯</span>
-                        <span>Watch items move on the conveyor belt</span>
-                    </div>
-                    <div class="instruction-item">
-                        <span class="instruction-icon">📦</span>
-                        <span>Press PICK (Space) when an item is in the pick zone</span>
-                    </div>
-                    <div class="instruction-item">
-                        <span class="instruction-icon">🎯</span>
-                        <span>Drop items to the correct node (1-4 keys)</span>
-                    </div>
-                    <div class="instruction-item">
-                        <span class="instruction-icon">⚠️</span>
-                        <span>Ignore items that don't belong to any node</span>
-                    </div>
-                </div>
-            </section>
-
-            
-            <section id="screen-results" class="results-screen">
-                <div class="results-container">
-                    <div class="results-header">
-                        <h2>🎯 Training Complete!</h2>
-                        <div id="performance-badge" class="performance-badge good">
-                            <span id="badge-score">Good</span>
-                        </div>
-                        <p id="badge-description" class="performance-description">
-                            Good job! Room for improvement.
-                        </p>
-                    </div>
-
-                    <div class="results-stats">
-                        <div class="stat-card primary">
-                            <div class="stat-value" id="res-accuracy">85%</div>
-                            <div class="stat-label">Accuracy</div>
-                            <div class="stat-icon">🎯</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="res-correct">34</div>
-                            <div class="stat-label">Correct</div>
-                            <div class="stat-icon">✅</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="res-missorted">4</div>
-                            <div class="stat-label">Missorted</div>
-                            <div class="stat-icon">❌</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="res-spillover">2</div>
-                            <div class="stat-label">Spillover</div>
-                            <div class="stat-icon">⚠️</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="res-falsepick">0</div>
-                            <div class="stat-label">False Pick</div>
-                            <div class="stat-icon">🚫</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="res-total-time">4:20</div>
-                            <div class="stat-label">Total Time</div>
-                            <div class="stat-icon">⏱️</div>
-                        </div>
-                    </div>
-
-                    <div class="results-breakdown">
-                        <h3>Performance Breakdown</h3>
-                        <div class="breakdown-grid">
-                            <div class="breakdown-item">
-                                <span class="breakdown-label">Total Items:</span>
-                                <span class="breakdown-value" id="breakdown-total">40</span>
-                            </div>
-                            <div class="breakdown-item">
-                                <span class="breakdown-label">Relevant Items:</span>
-                                <span class="breakdown-value" id="breakdown-relevant">28</span>
-                            </div>
-                            <div class="breakdown-item">
-                                <span class="breakdown-label">Irrelevant Items:</span>
-                                <span class="breakdown-value" id="breakdown-irrelevant">12</span>
-                            </div>
-                            <div class="breakdown-item">
-                                <span class="breakdown-label">Actions Taken:</span>
-                                <span class="breakdown-value" id="breakdown-actions">34</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="results-actions">
-                        <button id="btn-play-again" class="results-btn primary">
-                            <span>🔄</span>
-                            Play Again
-                        </button>
-                        <button id="btn-back-menu" class="results-btn">
-                            <span>🏠</span>
-                            Back to Menu
-                        </button>
-                        <button id="btn-view-history" class="results-btn">
-                            <span>📊</span>
-                            View History
-                        </button>
-                        <button id="btn-share-results" class="results-btn">
-                            <span>📤</span>
-                            Share Results
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-        </main>
-
-        
-        <footer class="app-footer">
-            <div class="footer-content">
-                <p>© 2024 Fluid Sorting Simulator. Built with modern web technologies.</p>
-                <div class="footer-links">
-                    <a href="#" class="footer-link">Privacy Policy</a>
-                    <a href="#" class="footer-link">Terms of Service</a>
-                    <a href="#" class="footer-link">Support</a>
-                </div>
-            </div>
-        </footer>
-
-    </div>
-
-    
-    
-    
-    <div id="error-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">⚠️ Error</h3>
-                <button class="modal-close">×</button>
-            </div>
-            <div class="modal-body">
-                <p id="error-message">An error occurred.</p>
-            </div>
-            <div class="modal-footer">
-                <button id="btn-retry-connection" class="modal-btn primary">
-                    🔄 Retry Connection
-                </button>
-                <button id="btn-continue-keyboard" class="modal-btn">
-                    ⌨️ Continue with Keyboard
-                </button></div></div></div>
-
-           </div>
-        </div>
-    </div>
-
-    <!-- About Modal -->
-    <div id="about-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">ℹ️ About Fluid Sorting Simulator</h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="about-content">
-                    <div class="about-section">
-                        <h4>🎯 Purpose</h4>
-                        <p>Train your sorting skills with progressive difficulty levels designed to improve speed and accuracy in fluid sorting operations.</p>
-                    </div>
-                    
-                    <div class="about-section">
-                        <h4>🎮 How to Play</h4>
-                        <ul>
-                            <li>Watch items move on the conveyor belt</li>
-                            <li>Press SPACE or click PICK when items are in the pick zone</li>
-                            <li>Use keys 1-4 or click buttons to drop items to correct nodes</li>
-                            <li>Ignore items that don't belong to any node</li>
-                            <li>Complete all 40 items to finish the level</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="about-section">
-                        <h4>🔧 Hardware Support</h4>
-                        <p>Connect an Arduino device via Web Serial API for physical controls. Requires Chrome or Edge browser with HTTPS connection.</p>
-                    </div>
-                    
-                    <div class="about-section">
-                        <h4>📊 Features</h4>
-                        <ul>
-                            <li>4 difficulty levels from Beginner to Expert</li>
-                            <li>Real-time performance tracking</li>
-                            <li>Detailed game history and analytics</li>
-                            <li>Keyboard and hardware controls</li>
-                            <li>Export training data to CSV</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="about-section">
-                        <h4>⌨️ Keyboard Shortcuts</h4>
-                        <div class="shortcuts-grid">
-                            <div class="shortcut-item">
-                                <kbd>Space</kbd>
-                                <span>Pick Item</span>
-                            </div>
-                            <div class="shortcut-item">
-                                <kbd>1-4</kbd>
-                                <span>Drop to Node</span>
-                            </div>
-                            <div class="shortcut-item">
-                                <kbd>Ctrl+P</kbd>
-                                <span>Training Tab</span>
-                            </div>
-                            <div class="shortcut-item">
-                                <kbd>Ctrl+H</kbd>
-                                <span>History Tab</span>
-                            </div>
-                            <div class="shortcut-item">
-                                <kbd>Ctrl+1-4</kbd>
-                                <span>Start Level</span>
-                            </div>
-                            <div class="shortcut-item">
-                                <kbd>Ctrl+R</kbd>
-                                <span>Random Level</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="about-section">
-                        <h4>🏆 Scoring System</h4>
-                        <div class="scoring-info">
-                            <div class="score-item">
-                                <span class="score-icon">✅</span>
-                                <span class="score-label">Correct:</span>
-                                <span class="score-desc">Item picked and dropped to correct node</span>
-                            </div>
-                            <div class="score-item">
-                                <span class="score-icon">❌</span>
-                                <span class="score-label">Missorted:</span>
-                                <span class="score-desc">Item picked but dropped to wrong node</span>
-                            </div>
-                            <div class="score-item">
-                                <span class="score-icon">⚠️</span>
-                                <span class="score-label">Spillover:</span>
-                                <span class="score-desc">Relevant item not picked in time</span>
-                            </div>
-                            <div class="score-item">
-                                <span class="score-icon">🚫</span>
-                                <span class="score-label">False Pick:</span>
-                                <span class="score-desc">Irrelevant item picked unnecessarily</span>
-                            </div>
-                            <div class="score-item">
-                                <span class="score-icon">👍</span>
-                                <span class="score-label">Ignored:</span>
-                                <span class="score-desc">Irrelevant item correctly ignored</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="about-section">
-                        <h4>🔗 Technical Info</h4>
-                        <div class="tech-info">
-                            <div class="tech-item">
-                                <strong>Version:</strong> 2.0.0
-                            </div>
-                            <div class="tech-item">
-                                <strong>Browser Support:</strong> Chrome 89+, Edge 89+, Firefox 87+
-                            </div>
-                            <div class="tech-item">
-                                <strong>Hardware API:</strong> Web Serial API
-                            </div>
-                            <div class="tech-item">
-                                <strong>Storage:</strong> Local Storage
-                            </div>
-                            <div class="tech-item">
-                                <strong>Framework:</strong> Vanilla JavaScript ES6+
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="modal-btn primary modal-close">
-                    👍 Got it!
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Settings Modal -->
-    <div id="settings-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">⚙️ Settings</h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="settings-content">
-                    <div class="setting-group">
-                        <h4>🔊 Audio Settings</h4>
-                        <div class="setting-item">
-                            <label class="setting-label">
-                                <input type="checkbox" id="setting-sound" checked>
-                                <span class="checkmark"></span>
-                                Enable Sound Effects
-                            </label>
-                        </div>
-                        <div class="setting-item">
-                            <label class="setting-label">
-                                <input type="range" id="setting-volume" min="0" max="100" value="50">
-                                <span>Volume: <span id="volume-display">50</span>%</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="setting-group">
-                        <h4>🎨 Visual Settings</h4>
-                        <div class="setting-item">
-                            <label class="setting-label">
-                                <input type="checkbox" id="setting-animations" checked>
-                                <span class="checkmark"></span>
-                                Enable Animations
-                            </label>
-                        </div>
-                        <div class="setting-item">
-                            <label class="setting-label">
-                                <select id="setting-theme">
-                                    <option value="light">Light Theme</option>
-                                    <option value="dark">Dark Theme</option>
-                                    <option value="auto">Auto (System)</option>
-                                </select>
-                                <span>Color Theme</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="setting-group">
-                        <h4>🎮 Game Settings</h4>
-                        <div class="setting-item">
-                            <label class="setting-label">
-                                <input type="checkbox" id="setting-auto-advance">
-                                <span class="checkmark"></span>
-                                Auto-advance to next level
-                            </label>
-                        </div>
-                        <div class="setting-item">
-                            <label class="setting-label">
-                                <input type="checkbox" id="setting-show-hints" checked>
-                                <span class="checkmark"></span>
-                                Show gameplay hints
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="setting-group">
-                        <h4>📊 Data Settings</h4>
-                        <div class="setting-item">
-                            <label class="setting-label">
-                                <input type="checkbox" id="setting-save-history" checked>
-                                <span class="checkmark"></span>
-                                Save game history
-                            </label>
-                        </div>
-                        <div class="setting-item">
-                            <button id="btn-clear-all-data" class="setting-btn danger">
-                                🗑️ Clear All Data
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="btn-save-settings" class="modal-btn primary">
-                    💾 Save Settings
-                </button>
-                <button class="modal-btn modal-close">
-                    ❌ Cancel
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Confirmation Modal -->
-    <div id="confirm-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="confirm-title">⚠️ Confirm Action</h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p id="confirm-message">Are you sure you want to proceed?</p>
-            </div>
-            <div class="modal-footer">
-                <button id="btn-confirm-yes" class="modal-btn danger">
-                    ✅ Yes
-                </button>
-                <button id="btn-confirm-no" class="modal-btn modal-close">
-                    ❌ No
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Loading Modal -->
-    <div id="loading-modal" class="modal" style="display: none;">
-        <div class="modal-content loading-content">
-            <div class="loading-spinner-large"></div>
-            <h3 id="loading-title">Loading...</h3>
-            <p id="loading-message">Please wait while we prepare your training session.</p>
-        </div>
-    </div>
-
-    <!-- Success Modal -->
-    <div id="success-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">🎉 Success!</h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="success-content">
-                    <div class="success-icon">🏆</div>
-                    <p id="success-message">Operation completed successfully!</p>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="modal-btn primary modal-close">
-                    👍 Awesome!
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ═══ FLOATING ACTION BUTTON ═══ -->
-    <div class="fab-container">
-        <button id="fab-main" class="fab-button">
-            <span class="fab-icon">⚡</span>
+  <!-- ════════ SCREEN 1: Level Selection ════════ -->
+  <div id="screen-menu" class="screen active">
+    <div class="menu-container">
+      <h1>🏭 Fluid Sorting Simulator</h1>
+      <p class="subtitle">Select Difficulty Level</p>
+      
+      <!-- Level Selection Buttons -->
+      <div class="level-buttons">
+        <button class="btn-level" data-level="1">
+          <span class="level-icon">🟢</span>
+          <span>Easy</span>
+          <span class="level-time">10 sec/label</span>
         </button>
-        <div class="fab-menu" id="fab-menu">
-            <button class="fab-option" id="fab-settings" title="Settings">
-                <span>⚙️</span>
-            </button>
-            <button class="fab-option" id="fab-help" title="Help">
-                <span>❓</span>
-            </button>
-            <button class="fab-option" id="fab-fullscreen" title="Fullscreen">
-                <span>🔳</span>
-            </button>
+        <button class="btn-level" data-level="2">
+          <span class="level-icon">🟡</span>
+          <span>Medium</span>
+          <span class="level-time">7 sec/label</span>
+        </button>
+        <button class="btn-level" data-level="3">
+          <span class="level-icon">🟠</span>
+          <span>Hard</span>
+          <span class="level-time">5 sec/label</span>
+        </button>
+        <button class="btn-level" data-level="4">
+          <span class="level-icon">🔴</span>
+          <span>Expert</span>
+          <span class="level-time">3 sec/label</span>
+        </button>
+      </div>
+
+      <!-- Arduino Serial Connection -->
+      <div class="serial-connection">
+        <button id="btn-connect-serial" class="btn-serial">🔌 Connect Arduino</button>
+        <div id="serial-status-web" class="status-badge disconnected">❌ Arduino Not Connected</div>
+        <p class="serial-info">Connect Arduino via USB OTG for hardware buttons</p>
+      </div>
+
+      <!-- Keyboard Controls Info -->
+      <div class="keyboard-hint">
+        <p>Keyboard Controls: <kbd>Space</kbd> = Pick, <kbd>1-4</kbd> = Drop to Node</p>
+        <p>Touch Controls: Available on-screen during game</p>
+      </div>
+
+      <!-- System Requirements -->
+      <div class="system-requirements">
+        <details>
+          <summary>📋 System Requirements</summary>
+          <ul>
+            <li>Chrome or Edge browser (Web Serial API support)</li>
+            <li>Android tablet with USB OTG support</li>
+            <li>Arduino Micro with 5 push buttons</li>
+            <li>USB OTG adapter for tablet connection</li>
+          </ul>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ SCREEN 2: Game ════════ -->
+  <div id="screen-game" class="screen">
+    <!-- Game Header HUD -->
+    <div class="game-header">
+      <div class="hud-left">
+        <span id="hud-level">Level: —</span>
+        <span id="hud-progress">0 / 40</span>
+      </div>
+      <div class="hud-center">
+        <span id="hud-status" class="status-idle">WATCHING</span>
+      </div>
+      <div class="hud-right">
+        <span id="hud-timer">⏱ —</span>
+        <span id="hud-arduino-status">🔌 —</span>
+      </div>
+    </div>
+
+    <!-- Conveyor Belt System -->
+    <div id="conveyor">
+      <div id="conveyor-track">
+        <!-- Labels will be dynamically injected here by JavaScript -->
+      </div>
+      <div id="pick-zone">▼ PICK ZONE ▼</div>
+    </div>
+
+    <!-- Node Drop Indicators -->
+    <div class="node-indicators">
+      <div class="node-box" data-node="1">
+        <div class="node-icon">📦</div>
+        <div class="node-label">Node 1</div>
+      </div>
+      <div class="node-box" data-node="2">
+        <div class="node-icon">📦</div>
+        <div class="node-label">Node 2</div>
+      </div>
+      <div class="node-box" data-node="3">
+        <div class="node-icon">📦</div>
+        <div class="node-label">Node 3</div>
+      </div>
+      <div class="node-box" data-node="4">
+        <div class="node-icon">📦</div>
+        <div class="node-label">Node 4</div>
+      </div>
+    </div>
+
+    <!-- Touch Controls (Fallback) -->
+    <div class="touch-controls">
+      <button id="btn-pick" class="ctrl-btn pick-btn">
+        <span class="btn-icon">✋</span>
+        <span class="btn-text">PICK</span>
+      </button>
+      <div class="drop-buttons">
+        <button class="ctrl-btn drop-btn" data-node="1">
+          <span class="btn-icon">1</span>
+          <span class="btn-text">Node 1</span>
+        </button>
+        <button class="ctrl-btn drop-btn" data-node="2">
+          <span class="btn-icon">2</span>
+          <span class="btn-text">Node 2</span>
+        </button>
+        <button class="ctrl-btn drop-btn" data-node="3">
+          <span class="btn-icon">3</span>
+          <span class="btn-text">Node 3</span>
+        </button>
+        <button class="ctrl-btn drop-btn" data-node="4">
+          <span class="btn-icon">4</span>
+          <span class="btn-text">Node 4</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Game Instructions (Collapsible) -->
+    <div class="game-instructions">
+      <details>
+        <summary>❓ How to Play</summary>
+        <div class="instructions-content">
+          <p><strong>Objective:</strong> Sort shipment labels to correct nodes</p>
+          <p><strong>Pick:</strong> Press PICK when label is in yellow zone</p>
+          <p><strong>Drop:</strong> Press correct Node button (1-4)</p>
+          <p><strong>Avoid:</strong> Don't pick irrelevant shipments</p>
         </div>
+      </details>
     </div>
+  </div>
 
-    <!-- ═══ TOAST CONTAINER ═══ -->
-    <div id="toast-container" class="toast-container"></div>
+  <!-- ════════ SCREEN 3: Results Dashboard ════════ -->
+  <div id="screen-results" class="screen">
+    <div class="results-container">
+      <h1>📊 Sorting Performance Dashboard</h1>
+      
+      <!-- Main Performance Stats -->
+      <div class="stats-grid">
+        <div class="stat-card perfect">
+          <div class="stat-icon">✅</div>
+          <div class="stat-number" id="res-correct">0</div>
+          <div class="stat-label">Perfectly Sorted</div>
+          <div class="stat-description">Correct picks to right nodes</div>
+        </div>
+        
+        <div class="stat-card missorted">
+          <div class="stat-icon">❌</div>
+          <div class="stat-number" id="res-missorted">0</div>
+          <div class="stat-label">Mis-Sorted</div>
+          <div class="stat-description">Picked but wrong node</div>
+        </div>
+        
+        <div class="stat-card spillover">
+          <div class="stat-icon">⚠️</div>
+          <div class="stat-number" id="res-spillover">0</div>
+          <div class="stat-label">Spill Over</div>
+          <div class="stat-description">Missed relevant items</div>
+        </div>
+        
+        <div class="stat-card falsepick">
+          <div class="stat-icon">🚫</div>
+          <div class="stat-number" id="res-falsepick">0</div>
+          <div class="stat-label">False Picks</div>
+          <div class="stat-description">Picked irrelevant items</div>
+        </div>
+        
+        <div class="stat-card ignored">
+          <div class="stat-icon">👁️</div>
+          <div class="stat-number" id="res-ignored">0</div>
+          <div class="stat-label">Correctly Ignored</div>
+          <div class="stat-description">Properly avoided irrelevant</div>
+        </div>
+      </div>
 
-    <!-- ═══ PROGRESS BAR ═══ -->
-    <div id="progress-bar" class="progress-bar" style="display: none;">
-        <div class="progress-fill"></div>
+      <!-- Summary Metrics -->
+      <div class="summary-stats">
+        <div class="summary-item">
+          <span class="summary-label">Total Time</span>
+          <span class="summary-value" id="res-total-time">0:00</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Accuracy</span>
+          <span class="summary-value" id="res-accuracy">0%</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Speed</span>
+          <span class="summary-value" id="res-speed">0 items/min</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Efficiency</span>
+          <span class="summary-value" id="res-efficiency">0%</span>
+        </div>
+      </div>
+
+      <!-- Performance Rating Badge -->
+      <div class="performance-badge" id="performance-badge">
+        <div class="badge-icon">🏆</div>
+        <div class="badge-text">Performance Rating</div>
+        <div class="badge-score" id="badge-score">Excellent</div>
+        <div class="badge-description" id="badge-description">Outstanding sorting performance!</div>
+      </div>
+
+      <!-- Detailed Breakdown -->
+      <div class="results-breakdown">
+        <h2>📈 Session Analysis</h2>
+        <div class="breakdown-grid">
+          <div class="breakdown-item">
+            <span class="breakdown-label">Total Items Processed:</span>
+            <span class="breakdown-value" id="breakdown-total">40</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">Relevant Items:</span>
+            <span class="breakdown-value" id="breakdown-relevant">25</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">Irrelevant Items:</span>
+            <span class="breakdown-value" id="breakdown-irrelevant">15</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">Actions Taken:</span>
+            <span class="breakdown-value" id="breakdown-actions">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="results-actions">
+        <button id="btn-restart" class="btn-restart">
+          <span class="btn-icon">🔄</span>
+          <span class="btn-text">Play Again</span>
+        </button>
+        <button id="btn-print-results" class="btn-secondary">
+          <span class="btn-icon">🖨️</span>
+          <span class="btn-text">Print Results</span>
+        </button>
+        <button id="btn-share-results" class="btn-secondary">
+          <span class="btn-icon">📤</span>
+          <span class="btn-text">Share Results</span>
+        </button>
+      </div>
+
+      <!-- Training Tips -->
+      <div class="training-tips">
+        <details>
+          <summary>💡 Training Tips</summary>
+          <div class="tips-content">
+            <ul>
+              <li><strong>Focus:</strong> Watch for label details in the pick zone</li>
+              <li><strong>Speed:</strong> Practice increases reaction time</li>
+              <li><strong>Accuracy:</strong> Better to miss than pick wrong item</li>
+              <li><strong>Pattern Recognition:</strong> Learn to identify node types quickly</li>
+            </ul>
+          </div>
+        </details>
+      </div>
     </div>
+  </div>
 
-    <!-- ═══ SCRIPTS ═══ -->
-    <script src="app.js"></script>
-    
-    <!-- Service Worker Registration -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch(registrationError => {
-                        console.log('SW registration failed: ', registrationError);
-                    });
-            });
-        }
-    </script>
+  <!-- ════════ Loading Overlay ════════ -->
+  <div id="loading-overlay" class="loading-overlay" style="display: none;">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <div class="loading-text">Loading Simulator...</div>
+    </div>
+  </div>
 
-    <!-- Analytics (Optional) -->
-    <script>
-        // Add your analytics code here if needed
-        // Example: Google Analytics, Mixpanel, etc.
-    </script>
+  <!-- ════════ Error Modal ════════ -->
+  <div id="error-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>⚠️ Connection Error</h2>
+        <button class="modal-close" id="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="error-message">An error occurred while connecting to Arduino.</p>
+        <div class="error-solutions">
+          <h3>Troubleshooting:</h3>
+          <ul>
+            <li>Check USB OTG connection</li>
+            <li>Ensure Arduino is powered on</li>
+            <li>Try refreshing the page</li>
+            <li>Use Chrome or Edge browser</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-retry-connection" class="btn-primary">🔄 Retry Connection</button>
+        <button id="btn-continue-keyboard" class="btn-secondary">⌨️ Continue with Keyboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ About Modal ════════ -->
+  <div id="about-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>ℹ️ About Fluid Sorting Simulator</h2>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Version:</strong> 2.0 - Web Serial Edition</p>
+        <p><strong>Purpose:</strong> Training tool for warehouse sorting operations</p>
+        <p><strong>Technology:</strong> Web Serial API, HTML5, CSS3, JavaScript</p>
+        <p><strong>Hardware:</strong> Arduino Micro with 5 tactile switches</p>
+        <br>
+        <p><strong>Features:</strong></p>
+        <ul>
+          <li>4 difficulty levels (3-10 seconds per item)</li>
+          <li>40 randomized shipping labels</li>
+          <li>Real-time performance tracking</li>
+          <li>Arduino hardware integration</li>
+          <li>Touch screen fallback controls</li>
+          <li>Comprehensive results analysis</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ Footer Info ════════ -->
+  <div class="footer-info">
+    <button id="btn-about" class="btn-link">ℹ️ About</button>
+    <span class="version">v2.0</span>
+  </div>
+
+  <!-- ════════ Scripts ════════ -->
+  <script src="app.js"></script>
+  
+  <!-- Service Worker for Offline Support -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(registration => console.log('SW registered'))
+          .catch(error => console.log('SW registration failed'));
+      });
+    }
+  </script>
 
 </body>
 </html>
