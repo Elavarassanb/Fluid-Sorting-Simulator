@@ -1,4 +1,725 @@
+ 
+
+
+    
+    
+    <title>Fluid Sorting Simulator</title>
+    
+    
+    
+    
+
+
+    
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Loading Fluid Sorting Simulator...</p>
+    </div>
+
+    
+    <div class="app-container">
+        
+        
+        <header class="app-header">
+            <div class="header-content">
+                <div class="app-logo">
+                    <span class="logo-icon">🧪</span>
+                    <h1 class="app-title">Fluid Sorting Simulator</h1>
+                </div>
+                
+                <nav class="tab-navigation">
+                    <button class="tab-btn active" id="tab-play">
+                        <span>🎮</span>
+                        Training
+                    </button>
+                    <button class="tab-btn" id="tab-history">
+                        <span>📊</span>
+                        History
+                    </button>
+                </nav>
+                
+                <div class="header-actions">
+                    <button id="btn-about" class="header-btn">
+                        <span>ℹ️</span>
+                        About
+                    </button>
+                </div>
             </div>
+        </header>
+
+        
+        <main class="main-content">
+            
+            
+            <section id="content-play" class="tab-content active">
+                
+                
+                <div class="training-hero">
+                    <div class="hero-content">
+                        <h1>Sorting Training Center</h1>
+                        <p>Master the art of fluid sorting with progressive difficulty levels designed to enhance your skills and precision.</p>
+                        <div class="hero-cta">
+                            <a href="#levels" class="cta-button primary">
+                                <span>🚀</span>
+                                Start Training
+                            </a>
+                            <a href="#tutorial" class="cta-button">
+                                <span>📚</span>
+                                View Tutorial
+                            </a>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="hero-animation">
+                            <div class="floating-elements">
+                                <div class="floating-element">1</div>
+                                <div class="floating-element">2</div>
+                                <div class="floating-element">3</div>
+                                <div class="floating-element">4</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="hardware-status">
+                    <div class="status-card" id="hardware-card">
+                        <div class="status-visual">
+                            <div class="device-icon">🔌</div>
+                            <div class="connection-indicator" id="connection-indicator"></div>
+                        </div>
+                        <div class="status-info">
+                            <h3 id="hw-status-title">Hardware Status</h3>
+                            <p id="hw-status-desc">Connect your Arduino device to begin training</p>
+                            <div class="status-actions">
+                                <button id="btn-connect-hw" class="connect-btn">
+                                    <span>⚡</span>
+                                    Connect Device
+                                </button>
+                                <button id="btn-test-hw" class="connect-btn secondary" style="display: none;">
+                                    <span>🔧</span>
+                                    Test Connection
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="level-selection-container" id="levels">
+                    <div class="section-header">
+                        <h2>Choose Your Challenge</h2>
+                        <p>Select a difficulty level that matches your current skill level and training goals</p>
+                    </div>
+
+                    <div class="levels-grid">
+                        
+                        
+                        <div class="level-card beginner" data-level="1" tabindex="0">
+                            <div class="level-badge">
+                                <span class="badge-icon">🌱</span>
+                                <span class="badge-text">Beginner</span>
+                            </div>
+                            
+                            <div class="level-header">
+                                <div class="level-icon-large">🟢</div>
+                                <div class="difficulty-visualization">
+                                    <div class="difficulty-meter">
+                                        <div class="meter-fill" style="width: 25%"></div>
+                                    </div>
+                                    <div class="difficulty-label">Easy</div>
+                                </div>
+                            </div>
+                            
+                            <div class="level-details">
+                                <h3>Getting Started</h3>
+                                <p>Perfect for first-time users. Take your time to learn the basics of sorting with generous time limits.</p>
+                                
+                                <div class="level-specs">
+                                    <div class="spec-item">
+                                        <span class="spec-icon">⏱️</span>
+                                        <div class="spec-info">
+                                            <div class="spec-value">10s</div>
+                                            <div class="spec-label">per item</div>
+                                        </div>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="spec-icon">📦</span>
+                                        <div class="spec-info">
+                                            <div class="spec-value">40</div>
+                                            <div class="spec-label">items</div>
+                                        </div>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="spec-icon">🎯</span>
+                                        <div class="spec-info">
+                                            <div class="spec-value">~7min</div>
+                                            <div class="spec-label">duration</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="level-stats">
+                                    <div class="stats-grid">
+                                        <div class="stat-item">
+                                            <span class="stat-value" id="beginner-success">--</span>
+                                            <span class="stat-label">Success Rate</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-value" id="beginner-time">--</span>
+                                            <span class="stat-label">Best Time</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-value" id="beginner-attempts">0</span>
+                                            <span class="stat-label">Attempts</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="level-actions">
+                                <button class="level-btn" data-level="1">
+                                    <span>🚀</span>
+                                    Start Training
+                                </button>
+                            </div>
+                        </div>
+
+                        
+                        <div class="level-card intermediate" data-level="2" tabindex="0">
+                            <div class="level-badge">
+                                <span class="badge-icon">⚡</span>
+                                <span class="badge-text">Intermediate</span>
+                            </div>
+                            
+                            <div class="level-header">
+                                <div class="level-icon-large">🟡</div>
+                                <div class="difficulty-visualization">
+                                    <div class="difficulty-meter">
+                                        <div class="meter-fill" style="width: 50%"></div>
+                                    </div>
+                                    <div class="difficulty-label">Moderate</div>
+                                </div>
+                            </div>
+                            
+                            <div class="level-details">
+                                <h3>Building Skills</h3>
+                                <p>Step up the pace with moderate time pressure. Good for users with basic sorting experience.</p>
+                                
+                                <div class="level-specs">
+                                    <div class="spec-item">
+                                        <span class="spec-icon">⏱️</span>
+                                        <div class="spec-info">
+                                            <div class="spec-value">7s</div>
+                                            <div class="spec-label">per item</div>
+                                        </div>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="spec-icon">📦</span>
+                                        <div class="spec-info">
+                                            <div class="spec-value">40</div>
+                                            <div class="spec-label">items</div>
+                                        </div>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="spec-icon">🎯</span>
+                                        <div class="spec-info">
+                                            <div class="spec-value">~5min</div>
+                                            <div class="spec-label">duration</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="level-stats">
+                                    <div class="stats-grid">
+                                        <div class="stat-item">
+                                            <span class="stat-value" id="intermediate-success">--</span>
+                                            <span class="stat-label">Success Rate</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-value" id="intermediate-time">--</span>
+                                            <span class="stat-label">Best Time</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-value" id="intermediate-attempts">0</span>
+                                            <span class="stat-label">Attempts</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="level-actions">
+                                <button class="level-btn" data-level="2">
+                                    <span>⚡</span>
+                                    Start Training
+                                </button>
+                            </div>
+                        </div>
+
+                        
+                        <div class="level-card advanced" data-level="3" tabindex="0">
+                            <div class="level-badge">
+                                <span class="badge-icon">🔥</span>
+                                <span class="badge-text">Advanced</span>
+                            </div>
+                            
+                            <div class="level-header">
+                                <div class="level-icon-large">🟠</div>
+                                <div class="difficulty-visualization">
+                                    <div class="difficulty-meter">
+                                        <div class="meter-fill" style="width: 75%"></div>
+                                    </div>
+                                    <div class="difficulty-label">Hard</div>
+                                </div>
+                            </div>
+                            
+                            <div class="level-details">
+                                <h3>Skilled Operator</h3>
+                                <p>Fast-paced sorting for experienced users. Precision and speed are both required for success.</p>
+                                
+                                <div class="level-specs">
+                                    <div class="spec-item">
+                                        <span class="spec-icon">⏱️</span>
+                                        <div class="spec-info">
+                                            <div class="spec-value">5s</div>
+                                            <div class="spec-label">per item</div>
+                                        </div>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="spec-icon">📦</span>
+                                        <div class="spec-info">
+                                            <div class="spec-value">40</div>
+                                            <div class="spec-label">items</div>
+                                        </div>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="spec-icon">🎯</span>
+                                        <div class="spec-info">
+                                            <div class="spec-value">~3min</div>
+                                            <div class="spec-label">duration</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="level-stats">
+                                    <div class="stats-grid">
+                                        <div class="stat-item">
+                                            <span class="stat-value" id="advanced-success">--</span>
+                                            <span class="stat-label">Success Rate</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-value" id="advanced-time">--</span>
+                                            <span class="stat-label">Best Time</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-value" id="advanced-attempts">0</span>
+                                            <span class="stat-label">Attempts</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="level-actions">
+                                <button class="level-btn" data-level="3">
+                                    <span>🔥</span>
+                                    Start Training
+                                </button>
+                            </div>
+                        </div>
+
+                        
+                        <div class="level-card expert" data-level="4" tabindex="0">
+                            <div class="level-badge premium">
+                                <span class="badge-icon">👑</span>
+                                <span class="badge-text">Expert</span>
+                            </div>
+                            
+                            <div class="level-header">
+                                <div class="level-icon-large">🔴</div>
+                                <div class="difficulty-visualization">
+                                    <div class="difficulty-meter">
+                                        <div class="meter-fill" style="width: 100%"></div>
+                                    </div>
+                                    <div class="difficulty-label">Expert</div>
+                                </div>
+                            </div>
+                            
+                            <div class="level-details">
+                                <h3>Master Level</h3>
+                                <p>Ultimate challenge for sorting masters. Lightning-fast decisions and flawless execution required.</p>
+                                
+                                <div class="level-specs">
+                                    <div class="spec-item">
+                                        <span class="spec-icon">⏱️</span>
+                                        <div class="spec-info">
+                                            <div class="spec-value">3s</div>
+                                            <div class="spec-label">per item</div>
+                                        </div>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="spec-icon">📦</span>
+                                        <div class="spec-info">
+                                            <div class="spec-value">40</div>
+                                            <div class="spec-label">items</div>
+                                        </div>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span class="spec-icon">🎯</span>
+                                        <div class="spec-info">
+                                            <div class="spec-value">~2min</div>
+                                            <div class="spec-label">duration</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="level-stats">
+                                    <div class="stats-grid">
+                                        <div class="stat-item">
+                                            <span class="stat-value" id="expert-success">--</span>
+                                            <span class="stat-label">Success Rate</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-value" id="expert-time">--</span>
+                                            <span class="stat-label">Best Time</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-value" id="expert-attempts">0</span>
+                                            <span class="stat-label">Attempts</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="level-actions">
+                                <button class="level-btn premium" data-level="4">
+                                    <span>👑</span>
+                                    Master Challenge
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                
+                <div class="quick-actions">
+                    <div class="action-card" tabindex="0">
+                        <div class="action-icon">🎲</div>
+                        <div class="action-content">
+                            <h4>Random Challenge</h4>
+                            <p>Let the system pick a difficulty level for you based on your performance</p>
+                        </div>
+                        <button class="action-btn" id="btn-random">
+                            <span>🎲</span>
+                            Try Random
+                        </button>
+                    </div>
+                    
+                    <div class="action-card" tabindex="0" id="tutorial">
+                        <div class="action-icon">📚</div>
+                        <div class="action-content">
+                            <h4>Interactive Tutorial</h4>
+                            <p>Learn sorting techniques with step-by-step guided instructions</p>
+                        </div>
+                        <button class="action-btn" id="btn-tutorial">
+                            <span>📚</span>
+                            Start Tutorial
+                        </button>
+                    </div>
+                    
+                    <div class="action-card" tabindex="0">
+                        <div class="action-icon">⚙️</div>
+                        <div class="action-content">
+                            <h4>Custom Training</h4>
+                            <p>Create personalized difficulty settings and training parameters</p>
+                        </div>
+                        <button class="action-btn" id="btn-custom">
+                            <span>⚙️</span>
+                            Customize
+                        </button>
+                    </div>
+                </div>
+
+                
+                <div class="loading-placeholder skeleton" style="display: none;" id="loading-placeholder">
+                    <div class="skeleton-text large"></div>
+                    <div class="skeleton-text"></div>
+                    <div class="skeleton-text short"></div>
+                </div>
+
+            </section>
+
+            
+            <section id="content-history" class="tab-content">
+                <div class="section-header">
+                    <h2>Training History</h2>
+                    <p>Track your progress and performance over time with detailed analytics</p>
+                </div>
+
+                
+                <div class="history-summary">
+                    <div class="summary-card">
+                        <div class="summary-value" id="total-games">0</div>
+                        <div class="summary-label">Total Games</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="best-accuracy">0%</div>
+                        <div class="summary-label">Best Accuracy</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="avg-accuracy">0%</div>
+                        <div class="summary-label">Average Accuracy</div>
+                    </div>
+                </div>
+
+                
+                <div class="history-actions">
+                    <button id="btn-clear-history" class="history-btn danger">
+                        <span>🗑️</span>
+                        Clear History
+                    </button>
+                    <button id="btn-export-history" class="history-btn">
+                        <span>📊</span>
+                        Export CSV
+                    </button>
+                </div>
+
+                
+                <div class="history-container">
+                    <div id="history-list" class="history-list">
+                        <div class="no-history">
+                            <p>🎯 No games played yet</p>
+                            <p>Play your first game to see results here!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section id="screen-game" class="game-screen">
+                <div class="game-header">
+                    <div class="game-hud">
+                        <div class="hud-item">
+                            <span class="hud-label">Level</span>
+                            <span id="hud-level" class="hud-value">Beginner</span>
+                        </div>
+                        <div class="hud-item">
+                            <span class="hud-label">Progress</span>
+                            <span id="hud-progress" class="hud-value">0 / 40</span>
+                        </div>
+                        <div class="hud-item">
+                            <span class="hud-label">Status</span>
+                            <span id="hud-status" class="hud-value status-idle">READY</span>
+                        </div>
+                        <div class="hud-item">
+                            <span class="hud-label">Speed</span>
+                            <span id="hud-timer" class="hud-value">10s/item</span>
+                        </div>
+                        <div class="hud-item">
+                            <span class="hud-label">Hardware</span>
+                            <span id="hud-arduino-status" class="hud-value">🔗 ✗</span>
+                        </div>
+                    </div>
+                    <button id="btn-exit-game" class="exit-btn">
+                        <span>←</span>
+                        Back to Menu
+                    </button>
+                </div>
+
+                <div class="game-area">
+                    <div class="conveyor-container">
+                        <div id="conveyor" class="conveyor">
+                            <div class="pick-zone">
+                                <div class="pick-zone-indicator">PICK ZONE</div>
+                            </div>
+                            <div id="conveyor-track" class="conveyor-track"></div>
+                        </div>
+                    </div>
+
+                    <div class="game-controls">
+                        <div class="control-section">
+                            <h4>Pick Control</h4>
+                            <button id="btn-pick" class="control-btn pick-btn">
+                                <span class="btn-icon">📦</span>
+                                <span class="btn-text">PICK</span>
+                                <span class="btn-key">(Space)</span>
+                            </button>
+                        </div>
+                        
+                        <div class="control-section">
+                            <h4>Drop Controls</h4>
+                            <div class="drop-controls">
+                                <button class="control-btn drop-btn" data-node="1">
+                                    <span class="btn-icon">1️⃣</span>
+                                    <span class="btn-text">Node 1</span>
+                                    <span class="btn-key">(1)</span>
+                                </button>
+                                <button class="control-btn drop-btn" data-node="2">
+                                    <span class="btn-icon">2️⃣</span>
+                                    <span class="btn-text">Node 2</span>
+                                    <span class="btn-key">(2)</span>
+                                </button>
+                                <button class="control-btn drop-btn" data-node="3">
+                                    <span class="btn-icon">3️⃣</span>
+                                    <span class="btn-text">Node 3</span>
+                                    <span class="btn-key">(3)</span>
+                                </button>
+                                <button class="control-btn drop-btn" data-node="4">
+                                    <span class="btn-icon">4️⃣</span>
+                                    <span class="btn-text">Node 4</span>
+                                    <span class="btn-key">(4)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-instructions">
+                    <div class="instruction-item">
+                        <span class="instruction-icon">🎯</span>
+                        <span>Watch items move on the conveyor belt</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-icon">📦</span>
+                        <span>Press PICK (Space) when an item is in the pick zone</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-icon">🎯</span>
+                        <span>Drop items to the correct node (1-4 keys)</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-icon">⚠️</span>
+                        <span>Ignore items that don't belong to any node</span>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section id="screen-results" class="results-screen">
+                <div class="results-container">
+                    <div class="results-header">
+                        <h2>🎯 Training Complete!</h2>
+                        <div id="performance-badge" class="performance-badge good">
+                            <span id="badge-score">Good</span>
+                        </div>
+                        <p id="badge-description" class="performance-description">
+                            Good job! Room for improvement.
+                        </p>
+                    </div>
+
+                    <div class="results-stats">
+                        <div class="stat-card primary">
+                            <div class="stat-value" id="res-accuracy">85%</div>
+                            <div class="stat-label">Accuracy</div>
+                            <div class="stat-icon">🎯</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="res-correct">34</div>
+                            <div class="stat-label">Correct</div>
+                            <div class="stat-icon">✅</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="res-missorted">4</div>
+                            <div class="stat-label">Missorted</div>
+                            <div class="stat-icon">❌</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="res-spillover">2</div>
+                            <div class="stat-label">Spillover</div>
+                            <div class="stat-icon">⚠️</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="res-falsepick">0</div>
+                            <div class="stat-label">False Pick</div>
+                            <div class="stat-icon">🚫</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="res-total-time">4:20</div>
+                            <div class="stat-label">Total Time</div>
+                            <div class="stat-icon">⏱️</div>
+                        </div>
+                    </div>
+
+                    <div class="results-breakdown">
+                        <h3>Performance Breakdown</h3>
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Total Items:</span>
+                                <span class="breakdown-value" id="breakdown-total">40</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Relevant Items:</span>
+                                <span class="breakdown-value" id="breakdown-relevant">28</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Irrelevant Items:</span>
+                                <span class="breakdown-value" id="breakdown-irrelevant">12</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Actions Taken:</span>
+                                <span class="breakdown-value" id="breakdown-actions">34</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-actions">
+                        <button id="btn-play-again" class="results-btn primary">
+                            <span>🔄</span>
+                            Play Again
+                        </button>
+                        <button id="btn-back-menu" class="results-btn">
+                            <span>🏠</span>
+                            Back to Menu
+                        </button>
+                        <button id="btn-view-history" class="results-btn">
+                            <span>📊</span>
+                            View History
+                        </button>
+                        <button id="btn-share-results" class="results-btn">
+                            <span>📤</span>
+                            Share Results
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>© 2024 Fluid Sorting Simulator. Built with modern web technologies.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                    <a href="#" class="footer-link">Support</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    
+    
+    
+    <div id="error-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">⚠️ Error</h3>
+                <button class="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <p id="error-message">An error occurred.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-retry-connection" class="modal-btn primary">
+                    🔄 Retry Connection
+                </button>
+                <button id="btn-continue-keyboard" class="modal-btn">
+                    ⌨️ Continue with Keyboard
+                </button></div></div></div>
+
+           </div>
         </div>
     </div>
 
