@@ -189,8 +189,8 @@ body {
 }
 
 .conveyor-label {
-  width: 200px;
-  height: 150px;
+  width: 800px;
+  height: 950px;
   margin: 0 30px;
   flex-shrink: 0;
   border-radius: 10px;
@@ -296,8 +296,8 @@ body {
   background: rgba(255, 183, 77, 0.3);
   z-index: 10;
 }
-#conveyor::before { left: calc(50% - 130px); }
-#conveyor::after  { left: calc(50% + 130px); }
+#conveyor::before { left: calc(50% - 800px); }
+#conveyor::after  { left: calc(50% + 800px); }
 
 /* âââ Node Indicators âââ */
 .node-indicators {
