@@ -229,7 +229,7 @@ body {
   border-radius: 8px;
   font-weight: bold;
   text-align: center;
-  min-width: 100px;
+  min-width: 200px;
   transition: all 0.3s;
 }
 .node-box.highlight {
