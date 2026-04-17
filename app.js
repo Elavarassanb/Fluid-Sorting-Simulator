@@ -17,6 +17,11 @@
   const btnBackToMenu = document.getElementById('btn-back-to-menu');
   const btnClearHistory = document.getElementById('btn-clear-history');
   const historyContent = document.getElementById('history-content');
+  const btnHistory = document.getElementById('btn-history');
+  const screenHistory = document.getElementById('screen-history');
+  const btnBackToMenu = document.getElementById('btn-back-to-menu');
+  const btnClearHistory = document.getElementById('btn-clear-history');
+  const historyContent = document.getElementById('history-content');
 
   // ─── Web Serial API Variables ───
   let serialPort = null;
@@ -604,6 +609,28 @@ function renderHistory() {
   btnHistory.addEventListener('click', () => {
   showHistoryScreen();
 });
+  if (btnHistory) {
+  btnHistory.addEventListener('click', (e) => {
+    e.preventDefault();
+    showHistoryScreen();
+  });
+}
+
+if (btnBackToMenu) {
+  btnBackToMenu.addEventListener('click', () => {
+    showScreen(screenMenu);
+  });
+}
+
+if (btnClearHistory) {
+  btnClearHistory.addEventListener('click', () => {
+    if (confirm('Are you sure you want to clear all game history?')) {
+      gameHistory = [];
+      localStorage.removeItem('fluidSortingHistory');
+      showHistoryScreen();
+    }
+  });
+}
 
   // ─── Initialize ───
   console.log('🎮 Fluid Sorting Simulator initialized with Web Serial API');
