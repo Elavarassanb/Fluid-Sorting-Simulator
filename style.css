@@ -23,24 +23,37 @@ body {
 .menu-container h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
 .subtitle { color: #8899aa; margin-bottom: 2rem; font-size: 1.1rem; }
 
-.level-buttons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1.5rem; }
+.level-buttons { 
+  display: flex; 
+  gap: 1rem; 
+  justify-content: center; 
+  margin-bottom: 1.5rem;
+  flex-wrap: nowrap; /* Prevent wrapping */
+}
 
 .btn-level {
   background: #1e3a5f;
   border: 2px solid #2a5a8f;
   color: #fff;
-  padding: 1rem 2rem;
+  padding: 1rem 1.5rem; /* Reduced horizontal padding */
   border-radius: 12px;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1rem; /* Slightly smaller font */
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.3rem;
   transition: all 0.2s;
-  min-width: 140px;
+  min-width: 120px; /* Reduced from 140px */
+  flex: 1; /* Equal width distribution */
+  max-width: 150px; /* Prevent buttons from getting too wide */
 }
-.btn-level:hover { background: #2a5a8f; transform: translateY(-2px); }
+
+.btn-level:hover { 
+  background: #2a5a8f; 
+  transform: translateY(-2px); 
+}
+
 
 .level-icon { font-size: 1.8rem; }
 .level-time { font-size: 0.8rem; color: #88aacc; }
