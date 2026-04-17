@@ -216,27 +216,42 @@
 
   // âââ Game Functions âââ
   function buildConveyor() {
-    conveyorTrack.innerHTML = '';
-    gameImages.forEach((img, idx) => {
-      const div = document.createElement('div');
-      div.className = 'conveyor-label';
-      div.dataset.index = idx;
-      if (img.node === null) div.classList.add('irrelevant');
+  conveyorTrack.innerHTML = '';
+  gameImages.forEach((img, idx) => {
+    const div = document.createElement('div');
+    div.className = 'conveyor-label';
+    div.dataset.index = idx;
+    if (img.node === null) div.classList.add('irrelevant');
 
-      const labelEl = document.createElement('div');
-      labelEl.className = 'label-placeholder';
-      labelEl.innerHTML = `
-        <div class="label-content">
-          <div class="label-title">${img.file}</div>
-          <div class="label-node">Node: ${img.node || 'N/A'}</div>
-          <div class="label-type">${img.node ? 'RELEVANT' : 'IGNORE'}</div>
-        </div>
-      `;
-      div.appendChild(labelEl);
+    // Create placeholder content
+    const labelEl = document.createElement('div');
+    labelEl.className = 'label-placeholder';
+    
+    const labelContent = document.createElement('div');
+    labelContent.className = 'label-content';
+    
+    const labelTitle = document.createElement('div');
+    labelTitle.className = 'label-title';
+    labelTitle.textContent = img.file;
+    
+    const labelNode = document.createElement('div');
+    labelNode.className = 'label-node';
+    labelNode.textContent = `Node: ${img.node || 'N/A'}`;
+    
+    const labelType = document.createElement('div');
+    labelType.className = 'label-type';
+    labelType.textContent = img.node ? 'RELEVANT' : 'IGNORE';
+    
+    // Assemble the structure
+    labelContent.appendChild(labelTitle);
+    labelContent.appendChild(labelNode);
+    labelContent.appendChild(labelType);
+    labelEl.appendChild(labelContent);
+    div.appendChild(labelEl);
 
-      conveyorTrack.appendChild(div);
-    });
-  }
+    conveyorTrack.appendChild(div);
+  });
+}
 
   function getLabelInPickZone() {
     const conveyorRect = document.getElementById('conveyor').getBoundingClientRect();
