@@ -42,10 +42,10 @@
   let gameHistory = JSON.parse(localStorage.getItem('fluidSortingHistory') || '[]');
 
   // âââ Constants âââ
-  const LABEL_WIDTH = 200;
+  const LABEL_WIDTH = 800;
   const LABEL_GAP = 60;
   const LABEL_TOTAL = LABEL_WIDTH + LABEL_GAP;
-  const PICK_ZONE_TOLERANCE = 130;
+  const PICK_ZONE_TOLERANCE = 800;
 
   // âââ Embedded Config (No Server Needed) âââ
   config = {
