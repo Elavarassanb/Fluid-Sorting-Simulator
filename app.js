@@ -419,7 +419,7 @@
   }
 
   function showResults() {
-    saveGameToHistory();
+    if (typeof saveGameToHistory === 'function') saveGameToHistory();
     gameEndTime = Date.now();
     const totalTimeMs = gameEndTime - gameStartTime;
     const totalTimeSec = Math.round(totalTimeMs / 1000);
@@ -495,76 +495,6 @@
       animationId = requestAnimationFrame(animate);
     }, 1000);
   }
-  function saveGameToHistory() {
-  const gameEndTime = Date.now();
-  const totalTimeMs = gameEndTime - gameStartTime;
-  const totalTimeSec = Math.round(totalTimeMs / 1000);
-  
-  const correct = results.filter(r => r.action === 'correct').length;
-  const missorted = results.filter(r => r.action === 'missorted').length;
-  const spillover = results.filter(r => r.action === 'spillover').length;
-  const falsepick = results.filter(r => r.action === 'falsepick').length;
-  const totalRelevant = gameImages.filter(i => i.node !== null).length;
-  const accuracy = totalRelevant > 0 ? Math.round((correct / totalRelevant) * 100) : 0;
-  
-  const historyItem = {
-    date: new Date().toLocaleString(),
-    level: level,
-    levelName: config.levels[level].name,
-    totalTime: totalTimeSec,
-    accuracy: accuracy,
-    correct: correct,
-    missorted: missorted,
-    spillover: spillover,
-    falsepick: falsepick,
-    totalItems: gameImages.length
-  };
-  
-  gameHistory.unshift(historyItem); // Add to beginning
-  if (gameHistory.length > 50) gameHistory.pop(); // Keep only last 50 games
-  
-  localStorage.setItem('fluidSortingHistory', JSON.stringify(gameHistory));
-}
-
-function showHistoryScreen() {
-  showScreen(screenHistory);
-  renderHistory();
-}
-
-function renderHistory() {
-  if (gameHistory.length === 0) {
-    historyContent.innerHTML = '<div class="no-history"><p>No games played yet. Start playing to see your history!</p></div>';
-    return;
-  }
-  
-  const historyHTML = gameHistory.map(game => `
-    <div class="history-item">
-      <div class="history-item-header">
-        <span class="history-date">${game.date}</span>
-        <span class="history-level">${game.levelName}</span>
-      </div>
-      <div class="history-stats">
-        <div class="history-stat">
-          <div class="history-stat-value">${game.accuracy}%</div>
-          <div class="history-stat-label">Accuracy</div>
-        </div>
-        <div class="history-stat">
-          <div class="history-stat-value">${game.correct}</div>
-          <div class="history-stat-label">Correct</div>
-        </div>
-        <div class="history-stat">
-          <div class="history-stat-value">${Math.floor(game.totalTime / 60)}:${(game.totalTime % 60).toString().padStart(2, '0')}</div>
-          <div class="history-stat-label">Time</div>
-        </div>
-        <div class="history-stat">
-          <div class="history-stat-value">${game.totalItems}</div>
-          <div class="history-stat-label">Items</div>
-        </div>
-      </div>
-    </div>
-  `).join('');
-  
-  historyContent.innerHTML = historyHTML;
 }
   // ─── Event Listeners ───
   btnConnectSerial.addEventListener('click', () => {
@@ -602,34 +532,115 @@ function renderHistory() {
       doDrop(node);
     }
   });
-  btnHistory.addEventListener('click', () => {
-  showHistoryScreen();
-});
-  if (btnHistory) {
-  btnHistory.addEventListener('click', (e) => {
-    e.preventDefault();
-    showHistoryScreen();
-  });
-}
-
-if (btnBackToMenu) {
-  btnBackToMenu.addEventListener('click', () => {
-    showScreen(screenMenu);
-  });
-}
-
-if (btnClearHistory) {
-  btnClearHistory.addEventListener('click', () => {
-    if (confirm('Are you sure you want to clear all game history?')) {
-      gameHistory = [];
-      localStorage.removeItem('fluidSortingHistory');
-      showHistoryScreen();
-    }
-  });
-}
-
+ 
   // ─── Initialize ───
   console.log('🎮 Fluid Sorting Simulator initialized with Web Serial API');
   updateSerialStatus(false);
+  // âââ History System âââ
+  let gameHistory = JSON.parse(localStorage.getItem('fluidSortingHistory') || '[]');
+  
+  // History DOM elements (only declare if they exist)
+  const btnHistory = document.getElementById('btn-history');
+  const screenHistory = document.getElementById('screen-history');
+  const btnBackToMenu = document.getElementById('btn-back-to-menu');
+  const btnClearHistory = document.getElementById('btn-clear-history');
+  const historyContent = document.getElementById('history-content');
 
+  // History functions
+  function saveGameToHistory() {
+    const gameEndTime = Date.now();
+    const totalTimeMs = gameEndTime - gameStartTime;
+    const totalTimeSec = Math.round(totalTimeMs / 1000);
+    
+    const correct = results.filter(r => r.action === 'correct').length;
+    const missorted = results.filter(r => r.action === 'missorted').length;
+    const spillover = results.filter(r => r.action === 'spillover').length;
+    const falsepick = results.filter(r => r.action === 'falsepick').length;
+    const totalRelevant = gameImages.filter(i => i.node !== null).length;
+    const accuracy = totalRelevant > 0 ? Math.round((correct / totalRelevant) * 100) : 0;
+    
+    const historyItem = {
+      date: new Date().toLocaleString(),
+      level: level,
+      levelName: config.levels[level].name,
+      totalTime: totalTimeSec,
+      accuracy: accuracy,
+      correct: correct,
+      missorted: missorted,
+      spillover: spillover,
+      falsepick: falsepick,
+      totalItems: gameImages.length
+    };
+    
+    gameHistory.unshift(historyItem);
+    if (gameHistory.length > 50) gameHistory.pop();
+    localStorage.setItem('fluidSortingHistory', JSON.stringify(gameHistory));
+  }
+
+  function showHistoryScreen() {
+    showScreen(screenHistory);
+    renderHistory();
+  }
+
+  function renderHistory() {
+    if (!historyContent) return;
+    
+    if (gameHistory.length === 0) {
+      historyContent.innerHTML = '<div class="no-history"><p>No games played yet. Start playing to see your history!</p></div>';
+      return;
+    }
+    
+    const historyHTML = gameHistory.map(game => `
+      <div class="history-item">
+        <div class="history-item-header">
+          <span class="history-date">${game.date}</span>
+          <span class="history-level">${game.levelName}</span>
+        </div>
+        <div class="history-stats">
+          <div class="history-stat">
+            <div class="history-stat-value">${game.accuracy}%</div>
+            <div class="history-stat-label">Accuracy</div>
+          </div>
+          <div class="history-stat">
+            <div class="history-stat-value">${game.correct}</div>
+            <div class="history-stat-label">Correct</div>
+          </div>
+          <div class="history-stat">
+            <div class="history-stat-value">${Math.floor(game.totalTime / 60)}:${(game.totalTime % 60).toString().padStart(2, '0')}</div>
+            <div class="history-stat-label">Time</div>
+          </div>
+          <div class="history-stat">
+            <div class="history-stat-value">${game.totalItems}</div>
+            <div class="history-stat-label">Items</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    
+    historyContent.innerHTML = historyHTML;
+  }
+
+  // History event listeners
+  if (btnHistory) {
+    btnHistory.addEventListener('click', (e) => {
+      e.preventDefault();
+      showHistoryScreen();
+    });
+  }
+
+  if (btnBackToMenu) {
+    btnBackToMenu.addEventListener('click', () => {
+      showScreen(screenMenu);
+    });
+  }
+
+  if (btnClearHistory) {
+    btnClearHistory.addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear all game history?')) {
+        gameHistory = [];
+        localStorage.removeItem('fluidSortingHistory');
+        showHistoryScreen();
+      }
+    });
+  }
 })();
