@@ -1,60 +1,146 @@
-/* ─── Reset & Base ─── */
+/*
+ * ╔══════════════════════════════════════════════════════════════════════╗
+ * ║                   FLUID SORTING SIMULATOR                          ║
+ * ║                        style.css                                   ║
+ * ╠══════════════════════════════════════════════════════════════════════╣
+ * ║                                                                    ║
+ * ║  WHAT IS THIS FILE?                                                ║
+ * ║  This CSS file controls the visual appearance of the entire app:   ║
+ * ║  colors, sizes, spacing, animations, and responsive layout.        ║
+ * ║                                                                    ║
+ * ║  CSS ORGANIZATION (scroll down to find each section):              ║
+ * ║  Section 1  — Reset & Base Styles (foundation for everything)      ║
+ * ║  Section 2  — Menu Screen (level selection, Arduino connection)    ║
+ * ║  Section 3  — Game Screen (conveyor belt, HUD, controls)          ║
+ * ║  Section 4  — Results Dashboard (stat cards, badges, summary)     ║
+ * ║  Section 5  — Responsive Design (adapts to different screens)     ║
+ * ║  Section 6  — Special Media Queries (dark mode, print, etc.)      ║
+ * ║  Section 7  — Accessibility & Focus Styles                         ║
+ * ║  Section 8  — Loading & Animation Utilities                        ║
+ * ║                                                                    ║
+ * ║  COLOR PALETTE USED:                                               ║
+ * ║  • Background:  #0f1923 (very dark navy blue)                      ║
+ * ║  • Text:        #e0e0e0 (light gray)                               ║
+ * ║  • Accent Blue:  #1565c0, #42a5f5                                  ║
+ * ║  • Success Green: #4caf50, #2e7d32                                 ║
+ * ║  • Warning Orange: #ff9800, #ffb74d                                ║
+ * ║  • Error Red:    #f44336, #c62828                                  ║
+ * ║  • Purple:       #9c27b0 (false picks)                             ║
+ * ║  • Gray:         #607d8b (ignored items)                           ║
+ * ║                                                                    ║
+ * ╚══════════════════════════════════════════════════════════════════════╝
+ */
+
+
+/* ══════════════════════════════════════════════════════════════════════
+ *  SECTION 1: RESET & BASE STYLES
+ * ══════════════════════════════════════════════════════════════════════
+ *  These styles remove browser defaults and set up the foundation.
+ *  Every browser adds its own margins/padding to elements — the reset
+ *  removes those so our layout is consistent everywhere.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/* Universal reset — removes default margin/padding from ALL elements */
 * { margin: 0; padding: 0; box-sizing: border-box; }
+/*  box-sizing: border-box = padding and borders are included in the
+    element's total width/height (much easier to work with) */
 
+/* Base body styles — applies to the entire page */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #0f1923;
-  color: #e0e0e0;
-  overflow: hidden;
-  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  /* Clean modern font */
+  background: #0f1923;   /* Very dark navy blue background */
+  color: #e0e0e0;        /* Light gray text for readability on dark bg */
+  overflow: hidden;       /* Prevent scrollbars (fullscreen app) */
+  height: 100vh;          /* vh = viewport height — fills the entire screen */
 }
 
-.screen { display: none; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; }
-.screen.active { display: flex; }
+/* 
+ * SCREEN SYSTEM — How we show/hide the 3 screens
+ * All screens are stacked on top of each other (position: absolute)
+ * and hidden by default (display: none).
+ * Adding the "active" class makes one screen visible.
+ */
+.screen { 
+  display: none;           /* Hidden by default */
+  height: 100vh;           /* Full screen height */
+  width: 100vw;            /* Full screen width */
+  position: absolute;      /* Stack on top of each other */
+  top: 0; 
+  left: 0; 
+}
+.screen.active { 
+  display: flex;           /* Visible + uses flexbox for layout */
+}
 
-/* ─── MENU ─── */
+
+/* ══════════════════════════════════════════════════════════════════════
+ *  SECTION 2: MENU SCREEN — Level Selection & Arduino Connection
+ * ══════════════════════════════════════════════════════════════════════
+ *  The first screen users see. Contains:
+ *  • App title
+ *  • 4 difficulty level buttons
+ *  • Arduino connection panel
+ *  • Keyboard hints
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/* Menu screen layout — centered content with gradient background */
 #screen-menu {
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #0f1923 0%, #1a2a3a 100%);
+  justify-content: center;   /* Center vertically */
+  align-items: center;       /* Center horizontally */
+  background: linear-gradient(135deg, #0f1923 0%, #1a2a3a 100%);  /* Subtle diagonal gradient */
 }
 
+/* Container that holds all menu content */
 .menu-container { text-align: center; max-width: 600px; padding: 2rem; }
 .menu-container h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+
+/* Subtitle text below the title */
 .subtitle { color: #8899aa; margin-bottom: 2rem; font-size: 1.1rem; }
 
-.level-buttons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1.5rem; }
+/* Grid of level buttons — flexbox wraps them in a row */
+.level-buttons { 
+  display: flex; 
+  gap: 1rem;              /* Space between buttons */
+  flex-wrap: wrap;         /* Wrap to next line on small screens */
+  justify-content: center; 
+  margin-bottom: 1.5rem; 
+}
 
+/* Individual level button (Easy, Medium, Hard, Expert) */
 .btn-level {
-  background: #1e3a5f;
-  border: 2px solid #2a5a8f;
+  background: #1e3a5f;          /* Dark blue */
+  border: 2px solid #2a5a8f;    /* Slightly lighter blue border */
   color: #fff;
   padding: 1rem 2rem;
-  border-radius: 12px;
-  cursor: pointer;
+  border-radius: 12px;          /* Rounded corners */
+  cursor: pointer;               /* Hand cursor on hover */
   font-size: 1.1rem;
   display: flex;
-  flex-direction: column;
+  flex-direction: column;        /* Stack icon, name, time vertically */
   align-items: center;
   gap: 0.3rem;
-  transition: all 0.2s;
+  transition: all 0.2s;          /* Smooth hover animation */
   min-width: 140px;
 }
+
+/* Hover effect — button lifts up slightly */
 .btn-level:hover { background: #2a5a8f; transform: translateY(-2px); }
 
-.level-icon { font-size: 1.8rem; }
-.level-time { font-size: 0.8rem; color: #88aacc; }
+/* Level button sub-elements */
+.level-icon { font-size: 1.8rem; }                    /* The colored circle emoji */
+.level-time { font-size: 0.8rem; color: #88aacc; }    /* "10 sec/label" text */
 
-/* ─── Serial Connection ─── */
+/* --- Arduino Serial Connection Panel --- */
 .serial-connection {
   margin: 1.5rem 0;
   text-align: center;
   padding: 1.5rem;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.05);    /* Very subtle white overlay */
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.1);
 }
 
+/* Arduino connect button — blue gradient with glow */
 .btn-serial {
   background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%);
   border: 2px solid #42a5f5;
@@ -67,57 +153,64 @@ body {
   margin-bottom: 1rem;
   transition: all 0.3s;
   display: block;
-  margin: 0 auto 1rem auto;
-  box-shadow: 0 4px 16px rgba(21, 101, 192, 0.3);
+  margin: 0 auto 1rem auto;   /* Center the button */
+  box-shadow: 0 4px 16px rgba(21, 101, 192, 0.3);  /* Blue glow underneath */
 }
-
 .btn-serial:hover {
   background: linear-gradient(135deg, #1976d2 0%, #1e88e5 100%);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(21, 101, 192, 0.4);
 }
+.btn-serial:active { transform: translateY(0); }  /* Press down effect */
 
-.btn-serial:active {
-  transform: translateY(0);
-}
-
+/* Connection status badge (green = connected, red = disconnected) */
 .status-badge {
   display: inline-block;
   padding: 0.4rem 1rem;
-  border-radius: 20px;
+  border-radius: 20px;       /* Pill shape */
   font-size: 0.85rem;
   margin-bottom: 1rem;
   font-weight: 500;
 }
 .status-badge.connected { 
-  background: #1b5e20; 
-  color: #a5d6a7; 
+  background: #1b5e20;       /* Dark green background */
+  color: #a5d6a7;            /* Light green text */
   border: 1px solid #4caf50;
 }
 .status-badge.disconnected { 
-  background: #b71c1c; 
-  color: #ef9a9a; 
+  background: #b71c1c;       /* Dark red background */
+  color: #ef9a9a;            /* Light red text */
   border: 1px solid #f44336;
 }
 
+/* Keyboard shortcut hints at the bottom of the menu */
 .keyboard-hint { color: #556677; font-size: 0.8rem; margin-top: 1rem; }
 .keyboard-hint kbd {
   background: #2a3a4a;
   padding: 2px 6px;
   border-radius: 4px;
   border: 1px solid #445566;
-  font-family: monospace;
+  font-family: monospace;    /* Monospace font for keyboard keys */
 }
 
-/* ─── GAME ─── */
+
+/* ══════════════════════════════════════════════════════════════════════
+ *  SECTION 3: GAME SCREEN — Conveyor Belt, HUD, Nodes, Controls
+ * ══════════════════════════════════════════════════════════════════════
+ *  The main gameplay screen. Stacked vertically:
+ *  [Header HUD] → [Conveyor Belt] → [Node Indicators] → [Touch Controls]
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/* Game screen layout — vertical column */
 #screen-game {
   flex-direction: column;
   background: #0f1923;
 }
 
+/* --- Game Header HUD (top bar) --- */
 .game-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between;  /* Left, center, right sections */
   align-items: center;
   padding: 0.8rem 1.5rem;
   background: #1a2a3a;
@@ -125,35 +218,43 @@ body {
 }
 .game-header span { font-size: 1rem; }
 
+/* Center status text (WATCHING / PICKED) */
 .hud-center { font-size: 1.3rem !important; font-weight: bold; }
-.status-idle { color: #90caf9; }
-.status-picked { color: #ffb74d; animation: pulse 0.5s infinite alternate; }
-.status-dropped { color: #81c784; }
+.status-idle { color: #90caf9; }     /* Blue = watching/waiting */
+.status-picked { 
+  color: #ffb74d;                     /* Orange = holding a label */
+  animation: pulse 0.5s infinite alternate;  /* Pulsing effect to draw attention */
+}
+.status-dropped { color: #81c784; }  /* Green = just dropped */
 
+/* Pulsing animation — fades opacity back and forth */
 @keyframes pulse { from { opacity: 1; } to { opacity: 0.5; } }
 
-/* ─── Conveyor ─── */
+/* --- Conveyor Belt Area --- */
+/* The conveyor is the large area where labels scroll across */
 #conveyor {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
+  flex: 1;                /* Takes up all remaining vertical space */
+  position: relative;     /* Needed for absolute-positioned children */
+  overflow: hidden;       /* Hide labels that scroll off-screen */
   background: #162636;
   border-bottom: 3px solid #2a4a6a;
 }
 
+/* The track is the horizontal strip that holds all labels and moves left */
 #conveyor-track {
-  display: flex;
+  display: flex;           /* Labels sit side by side */
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  transition: none;
+  top: 50%;                /* Vertically centered */
+  transform: translateY(-50%);  /* Fine-tune vertical centering */
+  transition: none;        /* No CSS transition — JavaScript handles movement */
 }
 
+/* Individual label card on the conveyor */
 .conveyor-label {
   width: 600px;
   height: 750px;
-  margin: 0 30px;
-  flex-shrink: 0;
+  margin: 0 30px;          /* Gap between labels */
+  flex-shrink: 0;           /* Don't let flexbox shrink these */
   border-radius: 10px;
   overflow: hidden;
   border: 3px solid #3a5a7a;
@@ -162,45 +263,56 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: border-color 0.3s, transform 0.3s;
+  transition: border-color 0.3s, transform 0.3s;  /* Smooth color/size changes */
 }
 
+/* Label image — scales to fit within the card */
 .conveyor-label img {
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain;
+  object-fit: contain;     /* Maintain aspect ratio */
 }
 
+/* Label states — visual feedback for different situations */
+
+/* IN PICK ZONE: Yellow border + glow (label is ready to be picked) */
 .conveyor-label.in-pick-zone { 
   border-color: #ffb74d; 
   box-shadow: 0 0 20px rgba(255, 183, 77, 0.4); 
 }
+
+/* PICKED: Green border + slight zoom (player grabbed this label) */
 .conveyor-label.picked { 
   border-color: #4caf50; 
   transform: scale(1.05); 
   box-shadow: 0 0 25px rgba(76, 175, 80, 0.5); 
 }
+
+/* MISSED: Red border + faded (relevant label scrolled past — oops!) */
 .conveyor-label.missed { 
   border-color: #f44336; 
   opacity: 0.5; 
 }
+
+/* IRRELEVANT: Slightly dimmed (player should ignore these) */
 .conveyor-label.irrelevant { 
   opacity: 0.6; 
 }
 
+/* "PICK ZONE" text label at the bottom center of the conveyor */
 #pick-zone {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   bottom: 5px;
-  color: #ffb74d;
+  color: #ffb74d;           /* Orange to match the pick zone highlight */
   font-weight: bold;
   font-size: 0.9rem;
   text-align: center;
-  pointer-events: none;
+  pointer-events: none;     /* Don't block clicks on labels behind it */
 }
 
-/* Pick zone vertical indicator lines */
+/* Vertical guide lines marking the pick zone boundaries */
 #conveyor::before,
 #conveyor::after {
   content: '';
@@ -208,20 +320,21 @@ body {
   top: 0;
   bottom: 0;
   width: 3px;
-  background: rgba(255, 183, 77, 0.3);
+  background: rgba(255, 183, 77, 0.3);  /* Semi-transparent orange */
   z-index: 10;
 }
-#conveyor::before { left: calc(50% - 600px); }
-#conveyor::after  { left: calc(50% + 600px); }
+#conveyor::before { left: calc(50% - 600px); }  /* Left boundary */
+#conveyor::after  { left: calc(50% + 600px); }  /* Right boundary */
 
-/* ─── Node Indicators ─── */
+/* --- Node Drop Indicators (4 boxes below the conveyor) --- */
 .node-indicators {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-around;  /* Evenly spaced */
   padding: 0.8rem 1rem;
   background: #1a2a3a;
 }
 
+/* Individual node box */
 .node-box {
   padding: 0.6rem 1.5rem;
   background: #1e3a5f;
@@ -232,17 +345,19 @@ body {
   min-width: 100px;
   transition: all 0.3s;
 }
+
+/* Node flash states (triggered by flashNode() in app.js) */
 .node-box.highlight {
-  background: #2e7d32;
+  background: #2e7d32;           /* Green = correct drop */
   border-color: #4caf50;
   box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
 }
 .node-box.wrong {
-  background: #c62828;
+  background: #c62828;           /* Red = wrong drop */
   border-color: #f44336;
 }
 
-/* ─── Touch Controls ─── */
+/* --- Touch Controls (bottom bar with Pick + Drop buttons) --- */
 .touch-controls {
   display: flex;
   align-items: center;
@@ -251,6 +366,7 @@ body {
   background: #0d1520;
 }
 
+/* Base button style for all control buttons */
 .ctrl-btn {
   padding: 0.8rem 1.2rem;
   border: none;
@@ -261,27 +377,39 @@ body {
   transition: all 0.15s;
 }
 
+/* PICK button — orange, takes 1/3 of the width */
 .pick-btn { 
   background: #ff9800; 
   color: #000; 
-  flex: 1; 
+  flex: 1;               /* Takes 1 part of available space */
   font-size: 1.2rem; 
 }
 .pick-btn:hover { background: #ffb74d; }
-.pick-btn:active { transform: scale(0.95); }
+.pick-btn:active { transform: scale(0.95); }  /* Shrink slightly when pressed */
 
+/* DROP buttons container — takes 2/3 of the width */
 .drop-buttons { display: flex; gap: 0.5rem; flex: 2; }
+
+/* Individual DROP button — blue */
 .drop-btn { background: #1565c0; color: #fff; flex: 1; }
 .drop-btn:hover { background: #1e88e5; }
 .drop-btn:active { transform: scale(0.95); }
 
-/* ─── RESULTS DASHBOARD ─── */
+
+/* ══════════════════════════════════════════════════════════════════════
+ *  SECTION 4: RESULTS DASHBOARD — Score Cards, Badges, Summary
+ * ══════════════════════════════════════════════════════════════════════
+ *  Shown after the game ends. Displays performance metrics in a
+ *  visually appealing dashboard layout.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/* Results screen layout */
 #screen-results {
   justify-content: center;
   align-items: center;
   background: linear-gradient(135deg, #0f1923 0%, #1a2a3a 100%);
   padding: 2rem;
-  overflow-y: auto;
+  overflow-y: auto;        /* Allow scrolling if content is tall */
 }
 
 .results-container {
@@ -296,14 +424,15 @@ body {
   color: #e0e0e0;
 }
 
-/* ─── Stats Grid ─── */
+/* --- Stats Grid: 5 colored cards in a row --- */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr);  /* 5 equal-width columns */
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
+/* Base stat card style */
 .stat-card {
   background: #1e3040;
   border-radius: 16px;
@@ -314,50 +443,43 @@ body {
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
+/* Hover effect — card lifts up */
 .stat-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 32px rgba(0,0,0,0.4);
 }
 
-.stat-card.perfect {
+/* Each card type has its own color scheme */
+.stat-card.perfect {                                          /* ✅ Correct sorts */
   border-color: #4caf50;
-  background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+  background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);  /* Green */
 }
-
-.stat-card.missorted {
+.stat-card.missorted {                                        /* ❌ Wrong node */
   border-color: #f44336;
-  background: linear-gradient(135deg, #b71c1c 0%, #c62828 100%);
+  background: linear-gradient(135deg, #b71c1c 0%, #c62828 100%);  /* Red */
 }
-
-.stat-card.spillover {
+.stat-card.spillover {                                        /* ⚠️ Missed items */
   border-color: #ff9800;
-  background: linear-gradient(135deg, #e65100 0%, #ef6c00 100%);
+  background: linear-gradient(135deg, #e65100 0%, #ef6c00 100%);  /* Orange */
 }
-
-.stat-card.falsepick {
+.stat-card.falsepick {                                        /* 🚫 Picked irrelevant */
   border-color: #9c27b0;
-  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);  /* Purple */
 }
-
-.stat-card.ignored {
+.stat-card.ignored {                                          /* 👁️ Correctly ignored */
   border-color: #607d8b;
-  background: linear-gradient(135deg, #37474f 0%, #455a64 100%);
+  background: linear-gradient(135deg, #37474f 0%, #455a64 100%);  /* Gray */
 }
 
-.stat-icon {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-  display: block;
-}
-
+/* Stat card sub-elements */
+.stat-icon { font-size: 2.5rem; margin-bottom: 0.5rem; display: block; }
 .stat-number {
   font-size: 3rem;
   font-weight: bold;
   color: #ffffff;
   margin-bottom: 0.3rem;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);  /* Subtle shadow for depth */
 }
-
 .stat-label {
   font-size: 0.9rem;
   color: #e0e0e0;
@@ -366,7 +488,7 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* ─── Summary Stats ─── */
+/* --- Summary Stats Row (Time, Accuracy, Speed, Efficiency) --- */
 .summary-stats {
   display: flex;
   justify-content: center;
@@ -377,11 +499,7 @@ body {
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.1);
 }
-
-.summary-item {
-  text-align: center;
-}
-
+.summary-item { text-align: center; }
 .summary-label {
   display: block;
   font-size: 0.9rem;
@@ -390,14 +508,13 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-
 .summary-value {
   font-size: 1.8rem;
   font-weight: bold;
   color: #ffffff;
 }
 
-/* ─── Performance Badge ─── */
+/* --- Performance Badge (Excellent/Good/Average/Poor) --- */
 .performance-badge {
   background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%);
   border: 3px solid #42a5f5;
@@ -407,12 +524,7 @@ body {
   max-width: 300px;
   box-shadow: 0 8px 24px rgba(21, 101, 192, 0.3);
 }
-
-.badge-icon {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
+.badge-icon { font-size: 2rem; margin-bottom: 0.5rem; }
 .badge-text {
   font-size: 0.9rem;
   color: #bbdefb;
@@ -420,39 +532,31 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+.badge-score { font-size: 1.5rem; font-weight: bold; color: #ffffff; }
 
-.badge-score {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #ffffff;
-}
-
-/* Performance badge colors based on score */
-.performance-badge.excellent { 
+/* Badge color variants — set by JavaScript based on accuracy % */
+.performance-badge.excellent {   /* 90%+ accuracy = green */
   background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
   border-color: #81c784;
   box-shadow: 0 8px 24px rgba(76, 175, 80, 0.3);
 }
-
-.performance-badge.good { 
+.performance-badge.good {        /* 75-89% accuracy = blue */
   background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
   border-color: #64b5f6;
   box-shadow: 0 8px 24px rgba(33, 150, 243, 0.3);
 }
-
-.performance-badge.average { 
+.performance-badge.average {     /* 50-74% accuracy = orange */
   background: linear-gradient(135deg, #f57c00 0%, #ff9800 100%);
   border-color: #ffb74d;
   box-shadow: 0 8px 24px rgba(255, 152, 0, 0.3);
 }
-
-.performance-badge.poor { 
+.performance-badge.poor {        /* Below 50% accuracy = red */
   background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
   border-color: #ef5350;
   box-shadow: 0 8px 24px rgba(244, 67, 54, 0.3);
 }
 
-/* ─── Restart Button ─── */
+/* --- Play Again Button --- */
 .btn-restart {
   background: linear-gradient(135deg, #1e3a5f 0%, #2a5a8f 100%);
   border: 2px solid #42a5f5;
@@ -466,130 +570,101 @@ body {
   transition: all 0.3s;
   box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
-
 .btn-restart:hover {
   background: linear-gradient(135deg, #2a5a8f 0%, #1565c0 100%);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0,0,0,0.4);
 }
 
-/* ─── Responsive Design ─── */
+
+/* ══════════════════════════════════════════════════════════════════════
+ *  SECTION 5: RESPONSIVE DESIGN — Adapts Layout to Different Screens
+ * ══════════════════════════════════════════════════════════════════════
+ *  @media queries apply styles ONLY when the screen matches a condition.
+ *  This ensures the app looks good on desktops, tablets, and phones.
+ *  
+ *  Breakpoints used:
+ *  • 1024px and below = Tablet landscape
+ *  • 768px and below  = Tablet portrait / large phone
+ *  • 480px and below  = Small phone
+ *  • 768px-1024px     = Tablet-specific optimizations
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/* --- Tablet Landscape (1024px and below) --- */
 @media (max-width: 1024px) {
   .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);  /* 3 cards per row instead of 5 */
     gap: 1rem;
   }
-  
   .summary-stats {
-    flex-direction: column;
+    flex-direction: column;  /* Stack summary items vertically */
     gap: 1rem;
   }
-  
-  .stat-number {
-    font-size: 2.5rem;
-  }
-  
-  .touch-controls {
-    padding: 1.5rem;
-  }
-  
+  .stat-number { font-size: 2.5rem; }
+  .touch-controls { padding: 1.5rem; }
   .ctrl-btn {
     padding: 1.2rem 1.5rem;
     font-size: 1.2rem;
-    min-height: 70px;
+    min-height: 70px;       /* Bigger touch targets for tablets */
   }
-  
-  .conveyor-label {
-    width: 250px;
-    height: 180px;
-  }
+  .conveyor-label { width: 250px; height: 180px; }  /* Smaller labels */
 }
 
+/* --- Tablet Portrait / Large Phone (768px and below) --- */
 @media (max-width: 768px) {
   .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);  /* 2 cards per row */
     gap: 1rem;
   }
-  
   .level-buttons {
-    flex-direction: column;
+    flex-direction: column;   /* Stack level buttons vertically */
     align-items: center;
   }
-  
-  .btn-level {
-    min-width: 200px;
-  }
-  
-  .menu-container {
-    padding: 1rem;
-  }
-  
-  .menu-container h1 {
-    font-size: 2rem;
-  }
+  .btn-level { min-width: 200px; }
+  .menu-container { padding: 1rem; }
+  .menu-container h1 { font-size: 2rem; }
 }
 
+/* --- Small Phone (480px and below) --- */
 @media (max-width: 480px) {
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr;  /* 1 card per row (full width) */
   }
-  
   .touch-controls {
-    flex-direction: column;
+    flex-direction: column;      /* Stack pick and drop buttons vertically */
     gap: 1rem;
   }
-  
-  .drop-buttons {
-    width: 100%;
-  }
-  
-  .conveyor-label {
-    width: 180px;
-    height: 120px;
-  }
-  
-  .stat-number {
-    font-size: 2rem;
-  }
-  
-  .summary-value {
-    font-size: 1.5rem;
-  }
+  .drop-buttons { width: 100%; }
+  .conveyor-label { width: 180px; height: 120px; }
+  .stat-number { font-size: 2rem; }
+  .summary-value { font-size: 1.5rem; }
 }
 
-/* ─── Tablet Specific Optimizations ─── */
+/* --- Tablet-Specific Optimizations (768px to 1024px) --- */
 @media (min-width: 768px) and (max-width: 1024px) {
-  .touch-controls {
-    padding: 2rem;
-  }
-  
+  .touch-controls { padding: 2rem; }
   .ctrl-btn {
     padding: 1.5rem 2rem;
     font-size: 1.3rem;
-    min-height: 80px;
+    min-height: 80px;          /* Extra large touch targets */
   }
-  
-  .pick-btn {
-    font-size: 1.5rem;
-  }
-  
-  .conveyor-label {
-    width: 280px;
-    height: 200px;
-  }
-  
-  .node-box {
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
-  }
-  
-  .btn-serial {
-    padding: 1.2rem 2.5rem;
-    font-size: 1.2rem;
-  }
+  .pick-btn { font-size: 1.5rem; }
+  .conveyor-label { width: 280px; height: 200px; }
+  .node-box { padding: 1rem 2rem; font-size: 1.1rem; }
+  .btn-serial { padding: 1.2rem 2.5rem; font-size: 1.2rem; }
 }
 
-/* ─── High DPI Displays ─── */
+
+/* ══════════════════════════════════════════════════════════════════════
+ *  SECTION 6: SPECIAL MEDIA QUERIES
+ * ══════════════════════════════════════════════════════════════════════
+ *  These handle special display conditions:
+ *  • High-DPI screens (Retina displays)
+ *  • Dark mode preference
+ *  • Print mode (for printing results)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/* High-DPI displays — make images crisp on Retina screens */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .conveyor-label img {
     image-rendering: -webkit-optimize-contrast;
@@ -597,57 +672,41 @@ body {
   }
 }
 
-/* ─── Dark Mode Enhancements ─── */
+/* Dark mode — slightly darker background for users who prefer dark themes */
 @media (prefers-color-scheme: dark) {
-  body {
-    background: #0a0f15;
-  }
-  
-  .status-badge.connected {
-    background: #0d4f14;
-    color: #81c784;
-  }
-  
-  .status-badge.disconnected {
-    background: #5d1a1a;
-    color: #ffcdd2;
-  }
+  body { background: #0a0f15; }
+  .status-badge.connected { background: #0d4f14; color: #81c784; }
+  .status-badge.disconnected { background: #5d1a1a; color: #ffcdd2; }
 }
 
-/* ─── Print Styles (for results) ─── */
+/* Print styles — when user prints the results page */
 @media print {
-  body {
-    background: white;
-    color: black;
-  }
-  
-  .screen:not(#screen-results) {
-    display: none !important;
-  }
-  
-  .btn-restart {
-    display: none;
-  }
-  
-  .stats-grid {
-    grid-template-columns: repeat(5, 1fr);
-  }
+  body { background: white; color: black; }
+  .screen:not(#screen-results) { display: none !important; }  /* Only show results */
+  .btn-restart { display: none; }                              /* Hide buttons */
+  .stats-grid { grid-template-columns: repeat(5, 1fr); }      /* Full 5-column layout */
 }
 
-/* ─── Accessibility ─── */
+
+/* ══════════════════════════════════════════════════════════════════════
+ *  SECTION 7: ACCESSIBILITY & FOCUS STYLES
+ * ══════════════════════════════════════════════════════════════════════
+ *  These styles ensure the app is usable by everyone, including:
+ *  • Keyboard-only users (visible focus outlines)
+ *  • Users with motion sensitivity (reduced animations)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/* Reduced motion — disables animations for users who are sensitive to motion */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
-  .conveyor-label {
-    transition: none;
-  }
+  .conveyor-label { transition: none; }
 }
 
-/* ─── Focus Styles for Keyboard Navigation ─── */
+/* Focus outlines — visible blue ring when navigating with keyboard (Tab key) */
 button:focus,
 .btn-level:focus,
 .btn-serial:focus,
@@ -656,13 +715,21 @@ button:focus,
   outline-offset: 2px;
 }
 
-/* ─── Loading States ─── */
+
+/* ══════════════════════════════════════════════════════════════════════
+ *  SECTION 8: LOADING & ANIMATION UTILITIES
+ * ══════════════════════════════════════════════════════════════════════
+ *  Reusable utility styles for loading states and spinner animations.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/* Loading state — dims the element and shows a spinner */
 .loading {
   opacity: 0.6;
-  pointer-events: none;
+  pointer-events: none;    /* Prevent clicks while loading */
   position: relative;
 }
 
+/* Spinner circle that appears on loading elements */
 .loading::after {
   content: '';
   position: absolute;
@@ -672,11 +739,12 @@ button:focus,
   height: 20px;
   margin: -10px 0 0 -10px;
   border: 2px solid #42a5f5;
-  border-top-color: transparent;
-  border-radius: 50%;
+  border-top-color: transparent;  /* One side transparent = spinning effect */
+  border-radius: 50%;             /* Circle shape */
   animation: spin 1s linear infinite;
 }
 
+/* Spin animation — rotates 360 degrees continuously */
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
