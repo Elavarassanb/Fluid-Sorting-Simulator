@@ -1,160 +1,65 @@
-<!--
-  ╔══════════════════════════════════════════════════════════════════════╗
-  ║                   FLUID SORTING SIMULATOR                          ║
-  ║                        index.html                                  ║
-  ╠══════════════════════════════════════════════════════════════════════╣
-  ║                                                                    ║
-  ║  WHAT IS THIS FILE?                                                ║
-  ║  This is the main HTML file — the "skeleton" of the app.           ║
-  ║  It defines the structure and content that users see on screen.    ║
-  ║                                                                    ║
-  ║  HOW THE APP WORKS (3 Screens):                                    ║
-  ║  ┌─────────────┐    ┌─────────────┐    ┌─────────────────┐        ║
-  ║  │  SCREEN 1   │───>│  SCREEN 2   │───>│   SCREEN 3      │        ║
-  ║  │  Main Menu  │    │  Game Play  │    │  Results/Score   │        ║
-  ║  │  (Pick a    │    │  (Conveyor  │    │  (How well did   │        ║
-  ║  │   level)    │    │   belt +    │    │   you sort?)     │        ║
-  ║  │             │    │   sorting)  │    │                  │        ║
-  ║  └─────────────┘    └─────────────┘    └─────────────────┘        ║
-  ║                                                                    ║
-  ║  Only ONE screen is visible at a time (controlled by "active"      ║
-  ║  CSS class). JavaScript in app.js switches between them.           ║
-  ║                                                                    ║
-  ║  FILES IN THIS PROJECT:                                            ║
-  ║  • index.html  — Structure (this file)                             ║
-  ║  • style.css   — Visual appearance (colors, layout, animations)    ║
-  ║  • app.js      — Logic (game mechanics, scoring, Arduino)          ║
-  ║  • images/     — 40 shipping label PNG images used in the game     ║
-  ║                                                                    ║
-  ╚══════════════════════════════════════════════════════════════════════╝
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Character encoding — ensures emojis and special characters display correctly -->
   <meta charset="UTF-8" />
-
-  <!-- Makes the page responsive on mobile/tablet devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Page title shown in the browser tab -->
-  <title>Fluid Sorting Simulator - Web Serial</title>
-
-  <!-- Link to our CSS file for all the styling -->
+  <title>Fluid Sorting Simulator v3.0</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Favicon (the tiny icon in the browser tab) — uses an inline SVG with a factory emoji -->
   <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏭</text></svg>">
 </head>
 <body>
 
-
-  <!-- ╔══════════════════════════════════════════════════════════════════╗
-       ║  SCREEN 1: MAIN MENU — Level Selection                         ║
-       ║                                                                 ║
-       ║  This is the first thing users see when they open the app.      ║
-       ║  They pick a difficulty level (Easy/Medium/Hard/Expert) and     ║
-       ║  optionally connect an Arduino for physical button controls.    ║
-       ╚══════════════════════════════════════════════════════════════════╝ -->
-  <div id="screen-menu" class="screen active">
-    <!-- "active" class = this screen is visible on page load -->
+  <!-- ════════ SCREEN 0: LOGIN ════════ -->
+  <div id="screen-login" class="screen active">
     <div class="menu-container">
+      <h1>🏭 Fluid Sorting Simulator</h1>
+      <p class="subtitle">Enter your Associate ID to begin</p>
+      <div class="login-form">
+        <input type="text" id="login-id-input" class="login-input" placeholder="Associate ID (e.g. JSmith42)" autocomplete="off" maxlength="30" />
+        <div id="login-error" class="login-error" style="display:none;"></div>
+        <button id="btn-login-submit" class="btn-serial">🔑 Sign In</button>
+      </div>
+      <p class="keyboard-hint" style="margin-top:2rem;">Your ID is used to track training history. No password required.</p>
+    </div>
+  </div>
 
-      <!-- App Title -->
+  <!-- ════════ SCREEN 1: MENU ════════ -->
+  <div id="screen-menu" class="screen">
+    <div class="menu-container">
       <h1>🏭 Fluid Sorting Simulator</h1>
       <p class="subtitle">Select Difficulty Level</p>
-      
-      <!-- 
-        DIFFICULTY LEVEL BUTTONS
-        Each button has a "data-level" attribute (1-4).
-        When clicked, app.js reads this number and starts the game
-        at that speed. Higher level = faster conveyor belt.
-      -->
+      <div id="menu-user-display" class="user-badge">👤 —</div>
+
       <div class="level-buttons">
-        <button class="btn-level" data-level="1">
-          <span class="level-icon">🟢</span>
-          <span>Easy</span>
-          <span class="level-time">10 sec/label</span>
-        </button>
-        <button class="btn-level" data-level="2">
-          <span class="level-icon">🟡</span>
-          <span>Medium</span>
-          <span class="level-time">7 sec/label</span>
-        </button>
-        <button class="btn-level" data-level="3">
-          <span class="level-icon">🟠</span>
-          <span>Hard</span>
-          <span class="level-time">5 sec/label</span>
-        </button>
-        <button class="btn-level" data-level="4">
-          <span class="level-icon">🔴</span>
-          <span>Expert</span>
-          <span class="level-time">3 sec/label</span>
-        </button>
+        <button class="btn-level" data-level="1"><span class="level-icon">🟢</span><span>Easy</span><span class="level-time">10 sec/label</span></button>
+        <button class="btn-level" data-level="2"><span class="level-icon">🟡</span><span>Medium</span><span class="level-time">7 sec/label</span></button>
+        <button class="btn-level" data-level="3"><span class="level-icon">🟠</span><span>Hard</span><span class="level-time">5 sec/label</span></button>
+        <button class="btn-level" data-level="4"><span class="level-icon">🔴</span><span>Expert</span><span class="level-time">3 sec/label</span></button>
       </div>
 
-      <!-- 
-        ARDUINO CONNECTION SECTION
-        Optional hardware feature: connect a physical Arduino board
-        with push buttons via USB. If not available, keyboard/touch
-        controls work as a fallback.
-      -->
+      <div class="menu-actions">
+        <button id="btn-view-history" class="btn-history">📊 View History</button>
+      </div>
+
       <div class="serial-connection">
         <button id="btn-connect-serial" class="btn-serial">🔌 Connect Arduino</button>
         <div id="serial-status-web" class="status-badge disconnected">❌ Arduino Not Connected</div>
-        <p class="serial-info">Connect Arduino via USB OTG for hardware buttons</p>
       </div>
 
-      <!-- Keyboard shortcut hints for the player -->
       <div class="keyboard-hint">
-        <p>Keyboard Controls: <kbd>Space</kbd> = Pick, <kbd>1-4</kbd> = Drop to Node</p>
-        <p>Touch Controls: Available on-screen during game</p>
-      </div>
-
-      <!-- Collapsible system requirements (click to expand) -->
-      <div class="system-requirements">
-        <details>
-          <summary>📋 System Requirements</summary>
-          <ul>
-            <li>Chrome or Edge browser (Web Serial API support)</li>
-            <li>Android tablet with USB OTG support</li>
-            <li>Arduino Micro with 5 push buttons</li>
-            <li>USB OTG adapter for tablet connection</li>
-          </ul>
-        </details>
+        <p>Keyboard: <kbd>Space</kbd> = Pick, <kbd>1-4</kbd> = Drop to Node</p>
       </div>
     </div>
   </div>
 
-  <!-- ╔══════════════════════════════════════════════════════════════════╗
-       ║  SCREEN 2: GAME PLAY                                           ║
-       ║                                                                 ║
-       ║  The main game screen. It has 4 sections stacked vertically:    ║
-       ║  ┌──────────────────────────────────────────┐                   ║
-       ║  │  HEADER HUD (level, progress, timer)     │                   ║
-       ║  ├──────────────────────────────────────────┤                   ║
-       ║  │  CONVEYOR BELT (labels scroll left)      │                   ║
-       ║  │  ← ← ← [label] [label] [label] ← ← ←  │                   ║
-       ║  ├──────────────────────────────────────────┤                   ║
-       ║  │  NODE INDICATORS (4 drop destinations)   │                   ║
-       ║  ├──────────────────────────────────────────┤                   ║
-       ║  │  TOUCH CONTROLS (Pick + Drop buttons)    │                   ║
-       ║  └──────────────────────────────────────────┘                   ║
-       ╚══════════════════════════════════════════════════════════════════╝ -->
+  <!-- ════════ SCREEN 2: GAME ════════ -->
   <div id="screen-game" class="screen">
-
-    <!-- 
-      GAME HEADER — Heads-Up Display (HUD)
-      Shows current level, progress (e.g. "5 / 40"), timer, and Arduino status.
-      Split into 3 columns: left info, center status, right timer.
-    -->
     <div class="game-header">
       <div class="hud-left">
         <span id="hud-level">Level: —</span>
         <span id="hud-progress">0 / 40</span>
       </div>
       <div class="hud-center">
-        <!-- Status text changes: "WATCHING" → "PICKED" → back to "WATCHING" -->
         <span id="hud-status" class="status-idle">WATCHING</span>
       </div>
       <div class="hud-right">
@@ -163,181 +68,49 @@
       </div>
     </div>
 
-    <!-- 
-      CONVEYOR BELT
-      This is the core game area. Shipping label images scroll from 
-      right to left. The player must "pick" labels when they enter 
-      the yellow PICK ZONE in the center.
-      
-      The #conveyor-track div is moved horizontally by JavaScript 
-      using CSS transform to create the scrolling animation.
-      Label <div> elements are injected here dynamically by app.js.
-    -->
     <div id="conveyor">
-      <div id="conveyor-track">
-        <!-- Labels are dynamically injected here by JavaScript (app.js → buildConveyor()) -->
-      </div>
-      <!-- Visual indicator showing where the player can pick items -->
+      <div id="conveyor-track"></div>
       <div id="pick-zone">▼ PICK ZONE ▼</div>
     </div>
 
-    <!-- 
-      NODE DROP INDICATORS
-      After picking a label, the player drops it into one of 4 nodes.
-      Each node represents a sorting destination (like a bin in a warehouse).
-      These boxes flash green (correct) or red (wrong) on drop.
-    -->
     <div class="node-indicators">
-      <div class="node-box" data-node="1">
-        <div class="node-icon">📦</div>
-        <div class="node-label">Node 1</div>
-      </div>
-      <div class="node-box" data-node="2">
-        <div class="node-icon">📦</div>
-        <div class="node-label">Node 2</div>
-      </div>
-      <div class="node-box" data-node="3">
-        <div class="node-icon">📦</div>
-        <div class="node-label">Node 3</div>
-      </div>
-      <div class="node-box" data-node="4">
-        <div class="node-icon">📦</div>
-        <div class="node-label">Node 4</div>
-      </div>
+      <div class="node-box" data-node="1"><div class="node-icon">📦</div><div class="node-label">Node 1</div></div>
+      <div class="node-box" data-node="2"><div class="node-icon">📦</div><div class="node-label">Node 2</div></div>
+      <div class="node-box" data-node="3"><div class="node-icon">📦</div><div class="node-label">Node 3</div></div>
+      <div class="node-box" data-node="4"><div class="node-icon">📦</div><div class="node-label">Node 4</div></div>
     </div>
 
-    <!-- 
-      TOUCH / ON-SCREEN CONTROLS
-      Fallback buttons for when Arduino hardware isn't connected.
-      - PICK button: grabs the label currently in the pick zone
-      - DROP buttons (1-4): sends the picked label to that node
-      
-      These do the same thing as keyboard shortcuts:
-        Space = Pick, 1/2/3/4 = Drop to Node
-    -->
     <div class="touch-controls">
-      <button id="btn-pick" class="ctrl-btn pick-btn">
-        <span class="btn-icon">✋</span>
-        <span class="btn-text">PICK</span>
-      </button>
+      <button id="btn-pick" class="ctrl-btn pick-btn"><span class="btn-icon">✋</span><span class="btn-text">PICK</span></button>
       <div class="drop-buttons">
-        <button class="ctrl-btn drop-btn" data-node="1">
-          <span class="btn-icon">1</span>
-          <span class="btn-text">Node 1</span>
-        </button>
-        <button class="ctrl-btn drop-btn" data-node="2">
-          <span class="btn-icon">2</span>
-          <span class="btn-text">Node 2</span>
-        </button>
-        <button class="ctrl-btn drop-btn" data-node="3">
-          <span class="btn-icon">3</span>
-          <span class="btn-text">Node 3</span>
-        </button>
-        <button class="ctrl-btn drop-btn" data-node="4">
-          <span class="btn-icon">4</span>
-          <span class="btn-text">Node 4</span>
-        </button>
+        <button class="ctrl-btn drop-btn" data-node="1"><span class="btn-icon">1</span><span class="btn-text">Node 1</span></button>
+        <button class="ctrl-btn drop-btn" data-node="2"><span class="btn-icon">2</span><span class="btn-text">Node 2</span></button>
+        <button class="ctrl-btn drop-btn" data-node="3"><span class="btn-icon">3</span><span class="btn-text">Node 3</span></button>
+        <button class="ctrl-btn drop-btn" data-node="4"><span class="btn-icon">4</span><span class="btn-text">Node 4</span></button>
       </div>
-    </div>
-
-    <!-- Collapsible how-to-play instructions -->
-    <div class="game-instructions">
-      <details>
-        <summary>❓ How to Play</summary>
-        <div class="instructions-content">
-          <p><strong>Objective:</strong> Sort shipment labels to correct nodes</p>
-          <p><strong>Pick:</strong> Press PICK when label is in yellow zone</p>
-          <p><strong>Drop:</strong> Press correct Node button (1-4)</p>
-          <p><strong>Avoid:</strong> Don't pick irrelevant shipments</p>
-        </div>
-      </details>
     </div>
   </div>
 
-  <!-- ╔══════════════════════════════════════════════════════════════════╗
-       ║  SCREEN 3: RESULTS DASHBOARD                                   ║
-       ║                                                                 ║
-       ║  Shown after all 40 labels have passed. Displays:               ║
-       ║  • 5 stat cards (correct, mis-sorted, spillover, etc.)          ║
-       ║  • Summary metrics (time, accuracy, speed)                      ║
-       ║  • Performance rating badge (Excellent/Good/Average/Poor)       ║
-       ║  • Detailed breakdown numbers                                   ║
-       ║  • Play Again button to return to menu                          ║
-       ╚══════════════════════════════════════════════════════════════════╝ -->
+  <!-- ════════ SCREEN 3: RESULTS ════════ -->
   <div id="screen-results" class="screen">
     <div class="results-container">
       <h1>📊 Sorting Performance Dashboard</h1>
-      
-      <!-- 
-        STAT CARDS — 5 key performance metrics
-        Each card shows a count for one type of outcome:
-        
-        ✅ Perfectly Sorted  = Picked the right label AND dropped to correct node
-        ❌ Mis-Sorted        = Picked the right label BUT dropped to wrong node
-        ⚠️ Spill Over        = A relevant label scrolled past without being picked
-        🚫 False Picks       = Picked an irrelevant label (shouldn't have touched it)
-        👁️ Correctly Ignored = An irrelevant label scrolled past (good — don't pick these)
-        
-        The numbers (id="res-correct" etc.) are updated by JavaScript in showResults().
-      -->
+
       <div class="stats-grid">
-        <div class="stat-card perfect">
-          <div class="stat-icon">✅</div>
-          <div class="stat-number" id="res-correct">0</div>
-          <div class="stat-label">Perfectly Sorted</div>
-          <div class="stat-description">Correct picks to right nodes</div>
-        </div>
-        
-        <div class="stat-card missorted">
-          <div class="stat-icon">❌</div>
-          <div class="stat-number" id="res-missorted">0</div>
-          <div class="stat-label">Mis-Sorted</div>
-          <div class="stat-description">Picked but wrong node</div>
-        </div>
-        
-        <div class="stat-card spillover">
-          <div class="stat-icon">⚠️</div>
-          <div class="stat-number" id="res-spillover">0</div>
-          <div class="stat-label">Spill Over</div>
-          <div class="stat-description">Missed relevant items</div>
-        </div>
-        
-        <div class="stat-card falsepick">
-          <div class="stat-icon">🚫</div>
-          <div class="stat-number" id="res-falsepick">0</div>
-          <div class="stat-label">False Picks</div>
-          <div class="stat-description">Picked irrelevant items</div>
-        </div>
-        
-        <div class="stat-card ignored">
-          <div class="stat-icon">👁️</div>
-          <div class="stat-number" id="res-ignored">0</div>
-          <div class="stat-label">Correctly Ignored</div>
-          <div class="stat-description">Properly avoided irrelevant</div>
-        </div>
+        <div class="stat-card perfect"><div class="stat-icon">✅</div><div class="stat-number" id="res-correct">0</div><div class="stat-label">Perfectly Sorted</div></div>
+        <div class="stat-card missorted"><div class="stat-icon">❌</div><div class="stat-number" id="res-missorted">0</div><div class="stat-label">Mis-Sorted</div></div>
+        <div class="stat-card spillover"><div class="stat-icon">⚠️</div><div class="stat-number" id="res-spillover">0</div><div class="stat-label">Spill Over</div></div>
+        <div class="stat-card falsepick"><div class="stat-icon">🚫</div><div class="stat-number" id="res-falsepick">0</div><div class="stat-label">False Picks</div></div>
+        <div class="stat-card ignored"><div class="stat-icon">👁️</div><div class="stat-number" id="res-ignored">0</div><div class="stat-label">Correctly Ignored</div></div>
       </div>
 
-      <!-- SUMMARY METRICS — Overall performance numbers -->
       <div class="summary-stats">
-        <div class="summary-item">
-          <span class="summary-label">Total Time</span>
-          <span class="summary-value" id="res-total-time">0:00</span>
-        </div>
-        <div class="summary-item">
-          <span class="summary-label">Accuracy</span>
-          <span class="summary-value" id="res-accuracy">0%</span>
-        </div>
-        <div class="summary-item">
-          <span class="summary-label">Speed</span>
-          <span class="summary-value" id="res-speed">0 items/min</span>
-        </div>
-        <div class="summary-item">
-          <span class="summary-label">Efficiency</span>
-          <span class="summary-value" id="res-efficiency">0%</span>
-        </div>
+        <div class="summary-item"><span class="summary-label">Total Time</span><span class="summary-value" id="res-total-time">0:00</span></div>
+        <div class="summary-item"><span class="summary-label">Accuracy</span><span class="summary-value" id="res-accuracy">0%</span></div>
+        <div class="summary-item"><span class="summary-label">Speed</span><span class="summary-value" id="res-speed">0 items/min</span></div>
+        <div class="summary-item"><span class="summary-label">Efficiency</span><span class="summary-value" id="res-efficiency">0%</span></div>
       </div>
 
-      <!-- PERFORMANCE BADGE — Color-coded rating based on accuracy % -->
       <div class="performance-badge" id="performance-badge">
         <div class="badge-icon">🏆</div>
         <div class="badge-text">Performance Rating</div>
@@ -345,150 +118,52 @@
         <div class="badge-description" id="badge-description">Outstanding sorting performance!</div>
       </div>
 
-      <!-- DETAILED BREAKDOWN — Raw numbers for analysis -->
-      <div class="results-breakdown">
-        <h2>📈 Session Analysis</h2>
-        <div class="breakdown-grid">
-          <div class="breakdown-item">
-            <span class="breakdown-label">Total Items Processed:</span>
-            <span class="breakdown-value" id="breakdown-total">40</span>
-          </div>
-          <div class="breakdown-item">
-            <span class="breakdown-label">Relevant Items:</span>
-            <span class="breakdown-value" id="breakdown-relevant">25</span>
-          </div>
-          <div class="breakdown-item">
-            <span class="breakdown-label">Irrelevant Items:</span>
-            <span class="breakdown-value" id="breakdown-irrelevant">15</span>
-          </div>
-          <div class="breakdown-item">
-            <span class="breakdown-label">Actions Taken:</span>
-            <span class="breakdown-value" id="breakdown-actions">0</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- ACTION BUTTONS — Play again, print, or share results -->
       <div class="results-actions">
-        <button id="btn-restart" class="btn-restart">
-          <span class="btn-icon">🔄</span>
-          <span class="btn-text">Play Again</span>
-        </button>
-        <button id="btn-print-results" class="btn-secondary">
-          <span class="btn-icon">🖨️</span>
-          <span class="btn-text">Print Results</span>
-        </button>
-        <button id="btn-share-results" class="btn-secondary">
-          <span class="btn-icon">📤</span>
-          <span class="btn-text">Share Results</span>
-        </button>
-      </div>
-
-      <!-- Collapsible training tips -->
-      <div class="training-tips">
-        <details>
-          <summary>💡 Training Tips</summary>
-          <div class="tips-content">
-            <ul>
-              <li><strong>Focus:</strong> Watch for label details in the pick zone</li>
-              <li><strong>Speed:</strong> Practice increases reaction time</li>
-              <li><strong>Accuracy:</strong> Better to miss than pick wrong item</li>
-              <li><strong>Pattern Recognition:</strong> Learn to identify node types quickly</li>
-            </ul>
-          </div>
-        </details>
+        <button id="btn-restart" class="btn-restart">🔄 Play Again</button>
+        <button id="btn-export-csv" class="btn-history">📥 Export to Excel</button>
       </div>
     </div>
   </div>
 
-  <!-- ╔══════════════════════════════════════════════════════════════════╗
-       ║  OVERLAYS & MODALS — Pop-up dialogs (hidden by default)        ║
-       ╚══════════════════════════════════════════════════════════════════╝ -->
+  <!-- ════════ SCREEN 4: HISTORY ════════ -->
+  <div id="screen-history" class="screen">
+    <div class="results-container">
+      <h1>📊 Session History</h1>
+      <p class="subtitle" style="margin-bottom:1.5rem;">All training sessions saved locally on this device</p>
 
-  <!-- Loading spinner — shown while resources load (currently unused) -->
-  <div id="loading-overlay" class="loading-overlay" style="display: none;">
-    <div class="loading-spinner">
-      <div class="spinner"></div>
-      <div class="loading-text">Loading Simulator...</div>
-    </div>
-  </div>
+      <div class="history-table-wrap">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Associate ID</th>
+              <th>Date</th>
+              <th>Level</th>
+              <th>✅ Correct</th>
+              <th>❌ Mis-Sort</th>
+              <th>⚠️ Spill</th>
+              <th>🚫 False</th>
+              <th>Accuracy</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="history-body"></tbody>
+        </table>
+      </div>
 
-  <!-- Error modal — shown if Arduino connection fails -->
-  <div id="error-modal" class="modal" style="display: none;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>⚠️ Connection Error</h2>
-        <button class="modal-close" id="modal-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p id="error-message">An error occurred while connecting to Arduino.</p>
-        <div class="error-solutions">
-          <h3>Troubleshooting:</h3>
-          <ul>
-            <li>Check USB OTG connection</li>
-            <li>Ensure Arduino is powered on</li>
-            <li>Try refreshing the page</li>
-            <li>Use Chrome or Edge browser</li>
-          </ul>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button id="btn-retry-connection" class="btn-primary">🔄 Retry Connection</button>
-        <button id="btn-continue-keyboard" class="btn-secondary">⌨️ Continue with Keyboard</button>
+      <div class="results-actions" style="margin-top:1.5rem;">
+        <button id="btn-back-from-history" class="btn-restart">← Back to Menu</button>
+        <button id="btn-export-history" class="btn-history">📥 Export to Excel</button>
       </div>
     </div>
   </div>
 
-  <!-- About modal — app info and feature list -->
-  <div id="about-modal" class="modal" style="display: none;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>ℹ️ About Fluid Sorting Simulator</h2>
-        <button class="modal-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p><strong>Version:</strong> 2.0 - Web Serial Edition</p>
-        <p><strong>Purpose:</strong> Training tool for warehouse sorting operations</p>
-        <p><strong>Technology:</strong> Web Serial API, HTML5, CSS3, JavaScript</p>
-        <p><strong>Hardware:</strong> Arduino Micro with 5 tactile switches</p>
-        <br>
-        <p><strong>Features:</strong></p>
-        <ul>
-          <li>4 difficulty levels (3-10 seconds per item)</li>
-          <li>40 randomized shipping labels</li>
-          <li>Real-time performance tracking</li>
-          <li>Arduino hardware integration</li>
-          <li>Touch screen fallback controls</li>
-          <li>Comprehensive results analysis</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer with About button and version number -->
-  <div class="footer-info">
-    <button id="btn-about" class="btn-link">ℹ️ About</button>
-    <span class="version">v2.0</span>
-  </div>
-
-  <!-- ╔══════════════════════════════════════════════════════════════════╗
-       ║  SCRIPTS — JavaScript files loaded at the end of <body>        ║
-       ║  (Loading at the end ensures all HTML elements exist first)     ║
-       ╚══════════════════════════════════════════════════════════════════╝ -->
-
-  <!-- Main game logic — all the game mechanics, Arduino, scoring -->
   <script src="app.js"></script>
-  
-  <!-- Service Worker registration — enables offline support (optional) -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then(registration => console.log('SW registered'))
-          .catch(error => console.log('SW registration failed'));
+        navigator.serviceWorker.register('sw.js').catch(() => {});
       });
     }
   </script>
-
 </body>
 </html>
