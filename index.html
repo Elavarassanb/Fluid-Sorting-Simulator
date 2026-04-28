@@ -10,160 +10,157 @@
 <body>
 
   <!-- ════════ SCREEN 0: LOGIN ════════ -->
-  <div id="screen-login" class="screen active">
-    <div class="menu-container">
-      <h1>🏭 Fluid Sorting Simulator</h1>
-      <p class="subtitle">Enter your Associate ID to begin</p>
-      <div class="login-form">
-        <input type="text" id="login-id-input" class="login-input" placeholder="Associate ID (e.g. JSmith42)" autocomplete="off" maxlength="30" />
-        <div id="login-error" class="login-error" style="display:none;"></div>
-        <button id="btn-login-submit" class="btn-serial">🔑 Sign In</button>
+  <div id="screen-login" class="screen active warehouse-bg">
+    <div class="login-container">
+      <div class="login-icons-row"><span>📦</span><span>🏭</span><span>📦</span></div>
+      <div class="login-title">👋 Welcome!</div>
+      <div class="login-subtitle">🆔 Type Your Name or Badge Number Below</div>
+      <div class="login-steps"><div class="login-step"><span class="step-num">1️⃣</span><span class="step-text">Type your ID 👇</span></div></div>
+      <input type="text" id="login-id-input" class="login-input" placeholder="✏️  Your Name or ID here..." autocomplete="off" maxlength="30" />
+      <div id="login-error" class="login-error" style="display:none;">⚠️ Please type your name or ID first!</div>
+      <div class="login-steps"><div class="login-step"><span class="step-num">2️⃣</span><span class="step-text">Press the yellow button 👇</span></div></div>
+      <button id="btn-login-submit" class="btn-signin">▶️ Start Training</button>
+      <div class="login-hint">🔓 No password needed &nbsp;•&nbsp; 💾 Your scores will be saved</div>
+      <div class="login-footer-icons">
+        <span title="Fast sorting">⚡</span><span title="Get a score">🏆</span><span title="Beat your record">📊</span>
       </div>
-      <p class="keyboard-hint" style="margin-top:2rem;">Your ID is used to track training history. No password required.</p>
     </div>
+    <div class="hazard-stripe"></div>
   </div>
 
   <!-- ════════ SCREEN 1: MENU ════════ -->
-  <div id="screen-menu" class="screen">
+  <div id="screen-menu" class="screen warehouse-bg">
     <div class="menu-container">
-      <h1>🏭 Fluid Sorting Simulator</h1>
-      <p class="subtitle">Select Difficulty Level</p>
+      <div class="menu-title">🏭 Fluid Sorting Simulator</div>
+      <div class="menu-subtitle">Select Sort Speed</div>
       <div id="menu-user-display" class="user-badge">👤 —</div>
-
-      <div class="level-buttons">
-        <button class="btn-level" data-level="1"><span class="level-icon">🟢</span><span>Easy</span><span class="level-time">10 sec/label</span></button>
-        <button class="btn-level" data-level="2"><span class="level-icon">🟡</span><span>Medium</span><span class="level-time">7 sec/label</span></button>
-        <button class="btn-level" data-level="3"><span class="level-icon">🟠</span><span>Hard</span><span class="level-time">5 sec/label</span></button>
-        <button class="btn-level" data-level="4"><span class="level-icon">🔴</span><span>Expert</span><span class="level-time">3 sec/label</span></button>
+      <div class="level-grid">
+        <div class="level-card" data-color="green" data-level="1"><span class="level-icon">🟢</span><span class="level-name">Easy</span><span class="level-speed">10 sec / label</span></div>
+        <div class="level-card" data-color="yellow" data-level="2"><span class="level-icon">🟡</span><span class="level-name">Medium</span><span class="level-speed">7 sec / label</span></div>
+        <div class="level-card" data-color="orange" data-level="3"><span class="level-icon">🟠</span><span class="level-name">Hard</span><span class="level-speed">5 sec / label</span></div>
+        <div class="level-card" data-color="red" data-level="4"><span class="level-icon">🔴</span><span class="level-name">Expert</span><span class="level-speed">3 sec / label</span></div>
       </div>
-
       <div class="menu-actions">
-        <button id="btn-view-history" class="btn-history">📊 View History</button>
+        <button id="btn-view-history" class="btn-action">📊 View History</button>
       </div>
-
-      <div class="serial-connection">
-        <button id="btn-connect-serial" class="btn-serial">🔌 Connect Arduino</button>
-        <div id="serial-status-web" class="status-badge disconnected">❌ Arduino Not Connected</div>
+      <div class="serial-panel">
+        <button id="btn-connect-serial" class="btn-connect">🔌 Connect Arduino</button>
+        <div><span id="serial-status-web" class="status-pill off">❌ Not Connected</span></div>
       </div>
-
-      <div class="keyboard-hint">
-        <p>Keyboard: <kbd>Space</kbd> = Pick, <kbd>1-4</kbd> = Drop to Node</p>
-      </div>
+      <div class="kbd-hint">Keyboard: <kbd>Space</kbd> = Pick &nbsp; <kbd>1</kbd>-<kbd>4</kbd> = Drop to Bin</div>
     </div>
+    <div class="hazard-stripe"></div>
   </div>
 
   <!-- ════════ SCREEN 2: GAME ════════ -->
   <div id="screen-game" class="screen">
     <div class="game-header">
-      <div class="hud-left">
-        <span id="hud-level">Level: —</span>
-        <span id="hud-progress">0 / 40</span>
-      </div>
-      <div class="hud-center">
-        <span id="hud-status" class="status-idle">WATCHING</span>
-      </div>
-      <div class="hud-right">
-        <span id="hud-timer">⏱ —</span>
-        <span id="hud-arduino-status">🔌 —</span>
-      </div>
+      <div class="hud-left"><span id="hud-level">Level: —</span> <span id="hud-progress">0 / 40</span></div>
+      <div class="hud-center"><span id="hud-status" class="status-idle">WATCHING</span></div>
+      <div class="hud-right"><span id="hud-timer">⏱ —</span></div>
     </div>
-
-    <div id="conveyor">
-      <div id="conveyor-track"></div>
-      <div id="pick-zone">▼ PICK ZONE ▼</div>
-    </div>
-
+    <div id="conveyor"><div id="conveyor-track"></div><div id="pick-zone">▼ PICK ZONE ▼</div></div>
     <div class="node-indicators">
-      <div class="node-box" data-node="1"><div class="node-icon">📦</div><div class="node-label">Node 1</div></div>
-      <div class="node-box" data-node="2"><div class="node-icon">📦</div><div class="node-label">Node 2</div></div>
-      <div class="node-box" data-node="3"><div class="node-icon">📦</div><div class="node-label">Node 3</div></div>
-      <div class="node-box" data-node="4"><div class="node-icon">📦</div><div class="node-label">Node 4</div></div>
+      <div class="node-box" data-node="1">📦 BIN 1</div>
+      <div class="node-box" data-node="2">📦 BIN 2</div>
+      <div class="node-box" data-node="3">📦 BIN 3</div>
+      <div class="node-box" data-node="4">📦 BIN 4</div>
     </div>
-
     <div class="touch-controls">
-      <button id="btn-pick" class="ctrl-btn pick-btn"><span class="btn-icon">✋</span><span class="btn-text">PICK</span></button>
+      <button id="btn-pick" class="ctrl-btn pick-btn">✋ PICK</button>
       <div class="drop-buttons">
-        <button class="ctrl-btn drop-btn" data-node="1"><span class="btn-icon">1</span><span class="btn-text">Node 1</span></button>
-        <button class="ctrl-btn drop-btn" data-node="2"><span class="btn-icon">2</span><span class="btn-text">Node 2</span></button>
-        <button class="ctrl-btn drop-btn" data-node="3"><span class="btn-icon">3</span><span class="btn-text">Node 3</span></button>
-        <button class="ctrl-btn drop-btn" data-node="4"><span class="btn-icon">4</span><span class="btn-text">Node 4</span></button>
+        <button class="ctrl-btn drop-btn" data-node="1">1 — Bin 1</button>
+        <button class="ctrl-btn drop-btn" data-node="2">2 — Bin 2</button>
+        <button class="ctrl-btn drop-btn" data-node="3">3 — Bin 3</button>
+        <button class="ctrl-btn drop-btn" data-node="4">4 — Bin 4</button>
       </div>
     </div>
   </div>
 
   <!-- ════════ SCREEN 3: RESULTS ════════ -->
-  <div id="screen-results" class="screen">
-    <div class="results-container">
-      <h1>📊 Sorting Performance Dashboard</h1>
+  <div id="screen-results" class="screen warehouse-bg">
+    <div class="results-wrap">
+      <div class="results-reaction" id="results-reaction">👏</div>
+      <div class="results-title">📋 Your Shift Report</div>
+      <div class="results-subtitle">Here's how you did — keep practicing to improve! 💪</div>
 
-      <div class="stats-grid">
-        <div class="stat-card perfect"><div class="stat-icon">✅</div><div class="stat-number" id="res-correct">0</div><div class="stat-label">Perfectly Sorted</div></div>
-        <div class="stat-card missorted"><div class="stat-icon">❌</div><div class="stat-number" id="res-missorted">0</div><div class="stat-label">Mis-Sorted</div></div>
-        <div class="stat-card spillover"><div class="stat-icon">⚠️</div><div class="stat-number" id="res-spillover">0</div><div class="stat-label">Spill Over</div></div>
-        <div class="stat-card falsepick"><div class="stat-icon">🚫</div><div class="stat-number" id="res-falsepick">0</div><div class="stat-label">False Picks</div></div>
-        <div class="stat-card ignored"><div class="stat-icon">👁️</div><div class="stat-number" id="res-ignored">0</div><div class="stat-label">Correctly Ignored</div></div>
+      <div class="results-split">
+        <div class="split-good">
+          <div class="split-header">✅ Good Job!</div>
+          <div class="split-items">
+            <div class="split-row"><span class="split-icon">🎯</span><span class="split-label">Sorted Correctly</span><span class="split-value good-val" id="res-correct">0</span></div>
+            <div class="split-row"><span class="split-icon">👁️</span><span class="split-label">Ignored Junk</span><span class="split-value good-val" id="res-ignored">0</span></div>
+          </div>
+          <div class="split-total" id="res-good-total">Total Good: 0 out of 40</div>
+        </div>
+        <div class="split-bad">
+          <div class="split-header">⚠️ Needs Work</div>
+          <div class="split-items">
+            <div class="split-row"><span class="split-icon">❌</span><span class="split-label">Wrong Bin</span><span class="split-value bad-val" id="res-missorted">0</span></div>
+            <div class="split-row"><span class="split-icon">😴</span><span class="split-label">Missed Items</span><span class="split-value bad-val" id="res-spillover">0</span></div>
+            <div class="split-row"><span class="split-icon">🚫</span><span class="split-label">Picked Junk</span><span class="split-value bad-val" id="res-falsepick">0</span></div>
+          </div>
+          <div class="split-total" id="res-bad-total">Total Mistakes: 0</div>
+        </div>
       </div>
 
-      <div class="summary-stats">
-        <div class="summary-item"><span class="summary-label">Total Time</span><span class="summary-value" id="res-total-time">0:00</span></div>
-        <div class="summary-item"><span class="summary-label">Accuracy</span><span class="summary-value" id="res-accuracy">0%</span></div>
-        <div class="summary-item"><span class="summary-label">Speed</span><span class="summary-value" id="res-speed">0 items/min</span></div>
-        <div class="summary-item"><span class="summary-label">Efficiency</span><span class="summary-value" id="res-efficiency">0%</span></div>
+      <div class="time-speed-bar">
+        <div class="tsb-item"><span class="tsb-icon">⏱️</span><span class="tsb-label">Time Taken</span><span class="tsb-value" id="res-total-time">0:00</span></div>
+        <div class="tsb-divider"></div>
+        <div class="tsb-item"><span class="tsb-icon">⚡</span><span class="tsb-label">Your Speed</span><span class="tsb-value" id="res-speed">0 items/min</span></div>
+        <div class="tsb-divider"></div>
+        <div class="tsb-item"><span class="tsb-icon">🎯</span><span class="tsb-label">Accuracy</span><span class="tsb-value" id="res-accuracy">0%</span></div>
       </div>
 
-      <div class="performance-badge" id="performance-badge">
-        <div class="badge-icon">🏆</div>
-        <div class="badge-text">Performance Rating</div>
-        <div class="badge-score" id="badge-score">Excellent</div>
-        <div class="badge-description" id="badge-description">Outstanding sorting performance!</div>
+      <div class="accuracy-bar-section">
+        <div class="accuracy-bar-label">Your Accuracy: <strong id="res-accuracy-bar-label">0%</strong></div>
+        <div class="accuracy-bar-track"><div class="accuracy-bar-fill" id="res-accuracy-bar" style="width:0%;"></div>
+          <div class="accuracy-marker" style="left:50%;"><span class="marker-line"></span><span class="marker-text">50%</span></div>
+          <div class="accuracy-marker" style="left:75%;"><span class="marker-line"></span><span class="marker-text">75%</span></div>
+          <div class="accuracy-marker" style="left:90%;"><span class="marker-line"></span><span class="marker-text">90%</span></div>
+        </div>
+        <div class="accuracy-bar-zones">
+          <span class="zone-label zone-red">😟 Below 50%<br>Needs Work</span>
+          <span class="zone-label zone-orange">🙂 50-74%<br>Average</span>
+          <span class="zone-label zone-blue">😊 75-89%<br>Good</span>
+          <span class="zone-label zone-green">🤩 90-100%<br>Excellent</span>
+        </div>
       </div>
 
-      <div class="results-actions">
-        <button id="btn-restart" class="btn-restart">🔄 Play Again</button>
-        <button id="btn-export-csv" class="btn-history">📥 Export to Excel</button>
+      <div class="quality-section">
+        <div class="quality-stamp" id="quality-stamp"><div class="stamp-emoji" id="stamp-emoji">🏆</div><div class="stamp-title">Quality Rating</div><div class="stamp-grade" id="stamp-grade">—</div></div>
+        <div class="quality-ranges" id="quality-ranges"></div>
+      </div>
+
+      <div class="results-btns">
+        <button id="btn-restart" class="btn-primary-wh">🔄 Try Again</button>
+        <button id="btn-export-csv" class="btn-secondary-wh">📥 Download Report</button>
+        <button id="btn-goto-history" class="btn-secondary-wh">📊 View All History</button>
       </div>
     </div>
+    <div class="hazard-stripe"></div>
   </div>
 
   <!-- ════════ SCREEN 4: HISTORY ════════ -->
-  <div id="screen-history" class="screen">
-    <div class="results-container">
-      <h1>📊 Session History</h1>
-      <p class="subtitle" style="margin-bottom:1.5rem;">All training sessions saved locally on this device</p>
-
+  <div id="screen-history" class="screen warehouse-bg">
+    <div class="history-wrap">
+      <div class="history-title">📋 Training Log</div>
+      <div class="history-subtitle">All sessions saved locally on this device</div>
       <div class="history-table-wrap">
         <table class="history-table">
-          <thead>
-            <tr>
-              <th>Associate ID</th>
-              <th>Date</th>
-              <th>Level</th>
-              <th>✅ Correct</th>
-              <th>❌ Mis-Sort</th>
-              <th>⚠️ Spill</th>
-              <th>🚫 False</th>
-              <th>Accuracy</th>
-              <th>Time</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Associate</th><th>Date</th><th>Level</th><th>✅</th><th>❌</th><th>⚠️</th><th>🚫</th><th>Accuracy</th><th>Time</th></tr></thead>
           <tbody id="history-body"></tbody>
         </table>
       </div>
-
-      <div class="results-actions" style="margin-top:1.5rem;">
-        <button id="btn-back-from-history" class="btn-restart">← Back to Menu</button>
-        <button id="btn-export-history" class="btn-history">📥 Export to Excel</button>
+      <div class="results-btns" style="margin-top:1.5rem;">
+        <button id="btn-back-from-history" class="btn-primary-wh">← Back to Menu</button>
+        <button id="btn-export-history" class="btn-secondary-wh">📥 Export to Excel</button>
       </div>
     </div>
+    <div class="hazard-stripe"></div>
   </div>
 
   <script src="app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
-      });
-    }
-  </script>
+  <script>if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); }); }</script>
 </body>
 </html>
