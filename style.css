@@ -23,7 +23,7 @@ body {
 
 /* ─── LOGIN SCREEN ─── */
 #screen-login { justify-content: center; align-items: center; flex-direction: column; }
-.login-container { width: 100%; max-width: 460px; padding: 2rem; text-align: center; }
+.login-container { width: 90%; max-width: 560px; padding: 2.5rem; text-align: center; }
 .login-icons-row {
   font-size: 3rem; display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 0.8rem;
   filter: drop-shadow(0 0 12px rgba(240,180,41,0.3));
@@ -62,7 +62,7 @@ body {
 
 /* ─── MENU SCREEN ─── */
 #screen-menu { justify-content: center; align-items: center; flex-direction: column; }
-.menu-container { width: 100%; max-width: 620px; padding: 2rem; text-align: center; }
+.menu-container { width: 90%; max-width: 750px; padding: 2.5rem; text-align: center; }
 .menu-title { font-size: 2rem; font-weight: 800; letter-spacing: 1px; margin-bottom: 0.3rem; }
 .menu-subtitle { color: #8b949e; font-size: 1.05rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px; }
 .user-badge { display: inline-block; background: #161b22; border: 1px solid #58a6ff; padding: 0.4rem 1.2rem; border-radius: 20px; font-size: 0.9rem; color: #58a6ff; margin-bottom: 1.5rem; }
@@ -139,7 +139,7 @@ body {
 
 /* ─── RESULTS SCREEN ─── */
 #screen-results { justify-content: center; align-items: center; flex-direction: column; padding: 2rem; overflow-y: auto; }
-.results-wrap { max-width: 960px; width: 100%; text-align: center; }
+.results-wrap { max-width: 1100px; width: 90%; text-align: center; }
 .results-reaction { font-size: 4rem; margin-bottom: 0.3rem; animation: bounceIn 0.6s ease-out; }
 @keyframes bounceIn { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
 .results-title { font-size: 1.8rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 0.3rem; }
@@ -204,7 +204,7 @@ body {
 
 /* ─── HISTORY SCREEN ─── */
 #screen-history { justify-content: center; align-items: center; flex-direction: column; padding: 2rem; overflow-y: auto; }
-.history-wrap { max-width: 1000px; width: 100%; text-align: center; }
+.history-wrap { max-width: 1100px; width: 90%; text-align: center; }
 .history-title { font-size: 1.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem; }
 .history-subtitle { color: #8b949e; margin-bottom: 1.5rem; }
 .history-table-wrap { overflow-x: auto; width: 100%; border-radius: 12px; border: 1px solid #30363d; }
@@ -248,6 +248,79 @@ body {
   .ctrl-btn { padding: 1.5rem 2rem; font-size: 1.3rem; min-height: 80px; }
   .pick-btn { font-size: 1.5rem; }
   .node-box { padding: 1rem 2rem; font-size: 1.1rem; }
+}
+/* ─── Large Desktop (1280px+) ─── */
+@media (min-width: 1280px) {
+  .login-container { max-width: 620px; padding: 3rem; }
+  .login-icons-row { font-size: 4rem; gap: 1.2rem; margin-bottom: 1.2rem; }
+  .login-title { font-size: 2.8rem; }
+  .login-subtitle { font-size: 1.25rem; margin-bottom: 2rem; }
+  .login-input { padding: 1.3rem 1.5rem; font-size: 1.35rem; }
+  .login-input::placeholder { font-size: 1.15rem; }
+  .btn-signin { padding: 1.3rem; font-size: 1.5rem; border-radius: 14px; }
+  .login-step { font-size: 1.1rem; }
+  .step-num { font-size: 1.5rem; }
+  .step-text { font-size: 1.1rem; }
+  .login-hint { font-size: 0.95rem; }
+  .login-footer-icons { font-size: 2.5rem; gap: 2rem; margin-top: 2.5rem; }
+
+  .menu-container { max-width: 850px; padding: 3rem; }
+  .menu-title { font-size: 2.5rem; }
+  .menu-subtitle { font-size: 1.2rem; }
+  .user-badge { font-size: 1rem; padding: 0.5rem 1.5rem; }
+  .level-grid { gap: 1.5rem; }
+  .level-card { padding: 1.8rem 1.2rem; border-radius: 16px; gap: 0.6rem; }
+  .level-icon { font-size: 2.5rem; }
+  .level-name { font-size: 1.15rem; }
+  .level-speed { font-size: 0.85rem; }
+  .btn-action { padding: 0.8rem 2rem; font-size: 1rem; }
+  .btn-connect { padding: 0.9rem 2rem; font-size: 1.05rem; }
+  .kbd-hint { font-size: 0.85rem; }
+
+  .results-wrap { max-width: 1200px; }
+  .results-reaction { font-size: 5rem; }
+  .results-title { font-size: 2.2rem; }
+  .split-header { font-size: 1.25rem; }
+  .split-row { font-size: 1.05rem; }
+  .split-value { font-size: 1.5rem; }
+  .tsb-icon { font-size: 1.8rem; }
+  .tsb-value { font-size: 1.6rem; }
+  .stamp-emoji { font-size: 3rem; }
+  .stamp-grade { font-size: 1.8rem; }
+  .quality-stamp { min-width: 200px; padding: 2rem 2.5rem; }
+  .scale-row { font-size: 0.95rem; }
+  .btn-primary-wh { padding: 1.1rem 3rem; font-size: 1.15rem; }
+  .btn-secondary-wh { padding: 1.1rem 2.5rem; font-size: 1.05rem; }
+
+  .history-wrap { max-width: 1200px; }
+  .history-title { font-size: 2.2rem; }
+  .history-table { font-size: 1rem; }
+  .history-table th { font-size: 0.82rem; padding: 1rem 0.8rem; }
+  .history-table td { padding: 0.85rem 0.8rem; }
+}
+
+/* ─── Extra Large Desktop (1600px+) ─── */
+@media (min-width: 1600px) {
+  .login-container { max-width: 700px; padding: 3.5rem; }
+  .login-icons-row { font-size: 5rem; }
+  .login-title { font-size: 3.2rem; }
+  .login-subtitle { font-size: 1.4rem; }
+  .login-input { padding: 1.5rem 1.8rem; font-size: 1.5rem; border-radius: 14px; }
+  .btn-signin { padding: 1.5rem; font-size: 1.7rem; }
+  .login-footer-icons { font-size: 3rem; }
+
+  .menu-container { max-width: 1000px; }
+  .menu-title { font-size: 3rem; }
+  .level-card { padding: 2.2rem 1.5rem; }
+  .level-icon { font-size: 3rem; }
+  .level-name { font-size: 1.3rem; }
+
+  .game-header { padding: 1rem 2rem; }
+  .game-header span { font-size: 1.1rem; }
+  .hud-center { font-size: 1.4rem !important; }
+  .node-box { padding: 1rem 2.5rem; font-size: 1.1rem; min-width: 120px; }
+  .ctrl-btn { padding: 1rem 1.5rem; font-size: 1.15rem; }
+  .pick-btn { font-size: 1.4rem; }
 }
 
 /* ─── Special Media ─── */
